@@ -43,3 +43,8 @@ target_link_libraries(140021671_direta ${catkin_LIBRARIES})
 
 add_executable(140021671_inversa src/Roteiro1/140021671_inversa.cpp)
 target_link_libraries(140021671_inversa ${catkin_LIBRARIES})
+
+
+# Roteiro 2
+add_executable(140021671_sensor src/Roteiro2/140021671_sensor.cpp)
+target_link_libraries(140021671_sensor ${catkin_LIBRARIES})
