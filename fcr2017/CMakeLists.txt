@@ -33,3 +33,13 @@ target_link_libraries(forward_kinematics_pioneer ${catkin_LIBRARIES})
 
 #add_executable(pwm_quad src/pwm_quad.cpp)
 #target_link_libraries(pwm_quad ${catkin_LIBRARIES})
+
+
+
+
+# Roteiro 1
+add_executable(140021671_direta src/Roteiro1/140021671_direta.cpp)
+target_link_libraries(140021671_direta ${catkin_LIBRARIES})
+
+add_executable(140021671_inversa src/Roteiro1/140021671_inversa.cpp)
+target_link_libraries(140021671_inversa ${catkin_LIBRARIES})
