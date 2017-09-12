@@ -48,3 +48,8 @@ target_link_libraries(140021671_inversa ${catkin_LIBRARIES})
 # Roteiro 2
 add_executable(140021671_sensor src/Roteiro2/140021671_sensor.cpp)
 target_link_libraries(140021671_sensor ${catkin_LIBRARIES})
+
+
+# Roteiro 3
+add_executable(140021671_localizacao src/Roteiro3/140021671_localizacao.cpp)
+target_link_libraries(140021671_localizacao ${catkin_LIBRARIES})
