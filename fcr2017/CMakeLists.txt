@@ -53,3 +53,8 @@ target_link_libraries(140021671_sensor ${catkin_LIBRARIES})
 # Roteiro 3
 add_executable(140021671_localizacao src/Roteiro3/140021671_localizacao.cpp)
 target_link_libraries(140021671_localizacao ${catkin_LIBRARIES})
+
+
+# Trabalho 1
+add_executable(140021671_Trabalho1 src/Trabalho1/140021671_Trabalho1.cpp)
+target_link_libraries(140021671_Trabalho1 ${catkin_LIBRARIES})
