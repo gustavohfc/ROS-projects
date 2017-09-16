@@ -12,8 +12,8 @@
 
 
 // Tolerancia do objetivo
-#define XY_GOAL_TOLERANCE 0.1 // metros
-#define YAW_GOAL_TOLERANCE 0.1 // metros
+#define XY_GOAL_TOLERANCE 0.2 // metros
+#define YAW_GOAL_TOLERANCE 0.2 // metros
 
 #define MIN_LINEAR_VELOCITY 0.2 // m/s
 #define MAX_LINEAR_VELOCITY 1 // m/s
@@ -21,7 +21,7 @@
 #define MAX_ANGULAR_VELOCITY 0.7 // m/s
 
 #define MIN_OBJECT_DISTANCE 0.5 // metros
-
+#define DISTANCE_START_BUG_MODE 4 // metros
 
 // Parametros da leitura do sensor laser
 #define LASER_ANGLE_MIN -2.35597991943
@@ -31,9 +31,9 @@
 #define LASER_ARRAY_READING_STEP 4 // +- 1 grau
 
 #define LASER_FRONT_READ_START 0
-#define LASER_FRONT_READ_END (degreesToRadians(20))
+#define LASER_FRONT_READ_END (degreesToRadians(30))
 
-#define LASER_DIAGONAL_READ_START (degreesToRadians(20))
+#define LASER_DIAGONAL_READ_START (degreesToRadians(30))
 #define LASER_DIAGONAL_READ_END (degreesToRadians(45))
 
 #define LASER_SIDE_FRONT_READ_START (degreesToRadians(50))
@@ -77,6 +77,7 @@ void poseCallBack(const nav_msgs::Odometry::ConstPtr& msg);
 void hokuyoCallBack(const sensor_msgs::LaserScan& msg);
 double getSmallestLaserDistance(double startAngle, double endAngle, const sensor_msgs::LaserScan& msg);
 geometry_msgs::Twist calculateTrajectoryVelocity();
+void startBugMode();
 double calculateTrajectoryLinearVelocity(double goalDistance);
 double calculateTrajectoryAngularVelocity(double theta);
 double normalizeAngle(double angle);
@@ -134,6 +135,11 @@ bool is_angularSpeedZero()  { return fabs(currentAngularVelocity) <  0.0001; }
 bool is_xyReached()         { return fabs(pioneerPosition.x - finalGoal.x) <  XY_GOAL_TOLERANCE && fabs(pioneerPosition.y - finalGoal.y) <  XY_GOAL_TOLERANCE; }
 bool is_yawReached()        { return fabs(pioneerPosition.yaw - finalGoal.yaw) <  YAW_GOAL_TOLERANCE; }
 bool is_goalReached()       { return is_linearSpeedZero() && is_angularSpeedZero() && is_xyReached() && is_yawReached(); }
+bool is_distanceCritical()  { return distanceFrontLeft < MIN_OBJECT_DISTANCE                                              ||
+                                     distanceFrontRight < MIN_OBJECT_DISTANCE                                             ||
+                                     (distanceDiagonalLeft * sin(LASER_DIAGONAL_READ_START)) < MIN_OBJECT_DISTANCE / 1.5  ||
+                                     (distanceDiagonalRight * sin(LASER_DIAGONAL_READ_START)) < MIN_OBJECT_DISTANCE / 1.5;
+                            }
 
 
 
@@ -158,13 +164,13 @@ void hokuyoCallBack(const sensor_msgs::LaserScan& msg)
   distanceDiagonalLeft = getSmallestLaserDistance(LASER_DIAGONAL_READ_START, LASER_DIAGONAL_READ_END, msg);
   distanceDiagonalRight = getSmallestLaserDistance(-LASER_DIAGONAL_READ_START, -LASER_DIAGONAL_READ_END, msg);
 
-  if (1)
+  if (pioneerBugStatus == BugLeft)
   {
     distanceSideFront = getSmallestLaserDistance(LASER_SIDE_FRONT_READ_START, LASER_SIDE_FRONT_READ_END, msg);
     distanceSideMiddle = getSmallestLaserDistance(LASER_SIDE_MIDDLE_READ_START, LASER_SIDE_MIDDLE_READ_END, msg);
     distanceSideBack = getSmallestLaserDistance(LASER_SIDE_BACK_READ_START, LASER_SIDE_BACK_READ_END, msg);
   }
-  else
+  else if (pioneerBugStatus == BugRight)
   {
     distanceSideFront = getSmallestLaserDistance(-LASER_SIDE_FRONT_READ_START, -LASER_SIDE_FRONT_READ_END, msg);
     distanceSideMiddle = getSmallestLaserDistance(-LASER_SIDE_MIDDLE_READ_START, -LASER_SIDE_MIDDLE_READ_END, msg);
@@ -242,7 +248,14 @@ geometry_msgs::Twist calculateTrajectoryVelocity()
   else
   {
     vel.linear.x = calculateTrajectoryLinearVelocity(goalDistance);
-    vel.angular.z = calculateTrajectoryAngularVelocity(goalRelativeTheta);
+
+    if (pioneerBugStatus == BugOff)
+      startBugMode();
+
+    if (pioneerBugStatus == BugOff)
+      vel.angular.z = calculateTrajectoryAngularVelocity(goalRelativeTheta);
+    else
+      vel.angular.z = calculateTrajectoryAngularVelocity(goalRelativeTheta);
   }
 
   // Reduz a velocidade linear nas curvas
@@ -254,19 +267,31 @@ geometry_msgs::Twist calculateTrajectoryVelocity()
 }
 
 
+void startBugMode()
+{
+  if (distanceFrontLeft < DISTANCE_START_BUG_MODE || (distanceDiagonalLeft * sin(LASER_DIAGONAL_READ_START)) < DISTANCE_START_BUG_MODE / 1.5)
+    pioneerBugStatus = BugLeft;
+  else if (distanceFrontRight < DISTANCE_START_BUG_MODE || (distanceDiagonalRight * sin(LASER_DIAGONAL_READ_START)) < DISTANCE_START_BUG_MODE / 1.5)
+    pioneerBugStatus = BugRight;
+}
+
+
 double calculateTrajectoryLinearVelocity(double goalDistance)
 {
-  double linearVelocity =  MAX_LINEAR_VELOCITY;
-
-  double pointDistance = std::min(goalDistance,
-                                  std::min(std::min(distanceFrontLeft, distanceFrontRight) - MIN_OBJECT_DISTANCE,
-                                           std::min(distanceDiagonalLeft, distanceDiagonalRight) - (MIN_OBJECT_DISTANCE / 2.5)));
-
-  if (pointDistance <= 0)
+  if (is_distanceCritical())
     return 0;
 
-  if (pointDistance < 2.5)
-    linearVelocity -= MAX_LINEAR_VELOCITY * (1 - pointDistance / 2.5);
+  double linearVelocity =  MAX_LINEAR_VELOCITY;
+
+  // double pointDistance = std::min(goalDistance,
+  //                                 std::min(std::min(distanceFrontLeft, distanceFrontRight) - MIN_OBJECT_DISTANCE,
+  //                                          std::min(distanceDiagonalLeft, distanceDiagonalRight) - (MIN_OBJECT_DISTANCE / 2.5)));
+  //
+  // if (pointDistance <= 0)
+  //   return 0;
+
+  if (goalDistance < 2.5)
+    linearVelocity -= MAX_LINEAR_VELOCITY * (1 - goalDistance / 2.5);
 
   if (linearVelocity > MAX_LINEAR_VELOCITY)
   {
