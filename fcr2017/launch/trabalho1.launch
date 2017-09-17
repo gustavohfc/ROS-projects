@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find fcr2017)/launch/pioneer3at.gazebo.launch" />
+
+    <!-- Sincroniza o mapa com o odometro no Rviz -->
+    <node pkg="tf" type="static_transform_publisher" name="map_odom" args="0 0 0 0 0 0 /map /odom 100" />
+
+    <!-- Carrega o mapa no Rviz -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(find fcr2017)/maps/cic_map.yaml" />
+
+    <!-- Abre o Rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/trabalho1.rviz"/>
+</launch>

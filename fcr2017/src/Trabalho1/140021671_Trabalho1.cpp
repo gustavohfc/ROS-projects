@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
 #include "tf/transform_listener.h"
@@ -21,7 +22,7 @@
 #define MAX_ANGULAR_VELOCITY 0.7 // m/s
 
 #define MIN_OBJECT_DISTANCE 0.5 // metros
-#define DISTANCE_START_BUG_MODE 2 // metros
+#define DISTANCE_START_BUG_MODE 1 // metros
 
 // Parametros da leitura do sensor laser
 #define LASER_ANGLE_MIN -2.35597991943
@@ -31,9 +32,9 @@
 #define LASER_ARRAY_READING_STEP 4 // +- 1 grau
 
 #define LASER_FRONT_READ_START 0
-#define LASER_FRONT_READ_END (degreesToRadians(30))
+#define LASER_FRONT_READ_END (degreesToRadians(20))
 
-#define LASER_DIAGONAL_READ_START (degreesToRadians(30))
+#define LASER_DIAGONAL_READ_START (degreesToRadians(20))
 #define LASER_DIAGONAL_READ_END (degreesToRadians(45))
 
 #define LASER_SIDE_FRONT_READ_START (degreesToRadians(50))
@@ -50,8 +51,8 @@
 struct Position{ double x, y, yaw; };
 
 // Indica se o Pioneer esta contornando um objeto e qual lado esse objeto esta
-enum Status { GoingToGoal, BugModeLeft, BugModeRight };
-Status pioneerStatus = GoingToGoal;
+enum Status { WaitingForGoal, GoingToGoal, BugModeLeft, BugModeRight };
+Status pioneerStatus = WaitingForGoal;
 
 Position pioneerPosition, finalGoal;
 double currentLinearVelocity, currentAngularVelocity;
@@ -76,10 +77,12 @@ bool is_goalReached();
 void poseCallBack(const nav_msgs::Odometry::ConstPtr& msg);
 void hokuyoCallBack(const sensor_msgs::LaserScan& msg);
 double getSmallestLaserDistance(const double startAngle, const double endAngle, const sensor_msgs::LaserScan& msg);
+void navGoalCallBack(const geometry_msgs::PoseStamped& msg);
 geometry_msgs::Twist calculateTrajectoryVelocity();
 void updatePioneerStatus(double goalRelativeTheta);
 double calculateTrajectoryLinearVelocity(const double goalDistance);
-double calculateTrajectoryAngularVelocity( double theta);
+double velocityToAngle(double theta);
+double calculateBugAngularVelocity();
 double normalizeAngle(double angle);
 
 
@@ -94,17 +97,11 @@ int main(int argc, char **argv)
 
     ros::Publisher pub_cmd_vel = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);
     ros::Subscriber sub_pose = n.subscribe("pose", 1, poseCallBack);
-    ros::Subscriber sub = n.subscribe("hokuyo_scan", 1, hokuyoCallBack);
+    ros::Subscriber sub_hokuyo_scan = n.subscribe("hokuyo_scan", 1, hokuyoCallBack);
+    ros::Subscriber sub_goal = n.subscribe("move_base_simple/goal", 1, navGoalCallBack);
 
-    if (argc != 4)
-    {
-        ROS_WARN("Numero de parametros invalido, o comando deve ser \'rosrun fcr2017 140021671_Trabalho1 X Y YAW\'");
-        return 1;
-    }
-    finalGoal.x = atof(argv[1]);
-    finalGoal.y = atof(argv[2]);
-    finalGoal.yaw = normalizeAngle(atof(argv[3]));
-    ROS_INFO("Indo para a posicao (%.2f, %.2f, %.2f)", finalGoal.x, finalGoal.y, finalGoal.yaw);
+
+    // ROS_INFO("Indo para a posicao (%.2f, %.2f, %.2f)", finalGoal.x, finalGoal.y, finalGoal.yaw);
 
     ros::Rate loop_rate(10);
 
@@ -114,10 +111,10 @@ int main(int argc, char **argv)
 
         ros::spinOnce();
 
-        if (is_goalReached())
+        if (is_goalReached() && pioneerStatus != WaitingForGoal)
         {
             ROS_INFO("Objetivo conlcuido, a posicao atual do Pioneer e' (%.2f, %.2f, %.2f)", pioneerPosition.x, pioneerPosition.y, pioneerPosition.yaw);
-            break;
+            pioneerStatus = WaitingForGoal;
         }
 
         geometry_msgs::Twist vel_msg = calculateTrajectoryVelocity();
@@ -129,16 +126,18 @@ int main(int argc, char **argv)
 
 
 
+
+
 // Funcoes simples de verificacao
 bool is_linearSpeedZero()   { return fabs(currentLinearVelocity) <  0.0001; }
 bool is_angularSpeedZero()  { return fabs(currentAngularVelocity) <  0.0001; }
 bool is_xyReached()         { return fabs(pioneerPosition.x - finalGoal.x) <  XY_GOAL_TOLERANCE && fabs(pioneerPosition.y - finalGoal.y) <  XY_GOAL_TOLERANCE; }
 bool is_yawReached()        { return fabs(pioneerPosition.yaw - finalGoal.yaw) <  YAW_GOAL_TOLERANCE; }
 bool is_goalReached()       { return is_linearSpeedZero() && is_angularSpeedZero() && is_xyReached() && is_yawReached(); }
-bool is_distanceCritical()  { return    distanceFrontLeft < MIN_OBJECT_DISTANCE                                          ||
-                                        distanceFrontRight < MIN_OBJECT_DISTANCE                                         ||
-                                        (distanceDiagonalLeft * sin(LASER_DIAGONAL_READ_START)) < MIN_OBJECT_DISTANCE    ||
-                                        (distanceDiagonalRight * sin(LASER_DIAGONAL_READ_START)) < MIN_OBJECT_DISTANCE;
+bool is_distanceCritical()  { return    distanceFrontLeft < MIN_OBJECT_DISTANCE     ||
+                                        distanceFrontRight < MIN_OBJECT_DISTANCE    ||
+                                        distanceDiagonalLeft < MIN_OBJECT_DISTANCE  ||
+                                        distanceDiagonalRight < MIN_OBJECT_DISTANCE;
                             }
 
 
@@ -177,13 +176,13 @@ void hokuyoCallBack(const sensor_msgs::LaserScan& msg)
         distanceSideBack = getSmallestLaserDistance(-LASER_SIDE_BACK_READ_START, -LASER_SIDE_BACK_READ_END, msg);
     }
 
-    ROS_INFO("distanceFrontLeft: %.2f", distanceFrontLeft);
-    ROS_INFO("distanceFrontRight: %.2f", distanceFrontRight);
-    ROS_INFO("distanceDiagonalLeft: %.2f", distanceDiagonalLeft);
-    ROS_INFO("distanceDiagonalRight: %.2f", distanceDiagonalRight);
-    ROS_INFO("distanceSideFront: %.2f", distanceSideFront);
-    ROS_INFO("distanceSideMiddle: %.2f", distanceSideMiddle);
-    ROS_INFO("distanceSideBack: %.2f", distanceSideBack);
+    // ROS_INFO("distanceFrontLeft: %.2f", distanceFrontLeft);
+    // ROS_INFO("distanceFrontRight: %.2f", distanceFrontRight);
+    // ROS_INFO("distanceDiagonalLeft: %.2f", distanceDiagonalLeft);
+    // ROS_INFO("distanceDiagonalRight: %.2f", distanceDiagonalRight);
+    // ROS_INFO("distanceSideFront: %.2f", distanceSideFront);
+    // ROS_INFO("distanceSideMiddle: %.2f", distanceSideMiddle);
+    // ROS_INFO("distanceSideBack: %.2f", distanceSideBack);
 }
 
 
@@ -216,6 +215,21 @@ double getSmallestLaserDistance(const double startAngle, const double endAngle, 
 }
 
 
+void navGoalCallBack(const geometry_msgs::PoseStamped& msg)
+{
+    finalGoal.x = msg.pose.position.x;
+    finalGoal.y = msg.pose.position.y;
+
+    tf::Pose tfPose;
+    tf::poseMsgToTF(msg.pose, tfPose);
+    finalGoal.yaw = tf::getYaw(tfPose.getRotation());
+
+    ROS_INFO("Indo para a posicao (%.2f, %.2f, %.2f)", finalGoal.x, finalGoal.y, finalGoal.yaw);
+    pioneerStatus = GoingToGoal;
+}
+
+
+
 geometry_msgs::Twist calculateTrajectoryVelocity()
 {
     geometry_msgs::Twist vel;
@@ -232,6 +246,24 @@ geometry_msgs::Twist calculateTrajectoryVelocity()
     // ROS_INFO("goalDistance: %.2f", goalDistance);
     // ROS_INFO("goalRelativeTheta: %.2f", goalRelativeTheta * 180 / M_PI);
 
+
+
+
+
+
+
+    if (pioneerStatus == WaitingForGoal)
+    {
+        vel.linear.x = 0;
+        vel.angular.z = 0;
+        return vel;
+    }
+
+
+
+
+
+
     if (is_xyReached())
     {
         vel.linear.x = 0;
@@ -242,25 +274,34 @@ geometry_msgs::Twist calculateTrajectoryVelocity()
         else
         {
             // Corrige o angulo final
-            vel.angular.z = calculateTrajectoryAngularVelocity(finalGoal.yaw - pioneerPosition.yaw);
+            vel.angular.z = velocityToAngle(finalGoal.yaw - pioneerPosition.yaw);
         }
     }
     else
     {
-        vel.linear.x = calculateTrajectoryLinearVelocity(goalDistance);
-
         updatePioneerStatus(goalRelativeTheta);
 
         if (pioneerStatus == GoingToGoal)
-            vel.angular.z = calculateTrajectoryAngularVelocity(goalRelativeTheta);
+        {
+            vel.linear.x = calculateTrajectoryLinearVelocity(goalDistance);
+            vel.angular.z = velocityToAngle(goalRelativeTheta);
+
+            // Reduz a velocidade linear nas curvas
+            vel.linear.x *= 1 - (fabs(vel.angular.z) / MAX_ANGULAR_VELOCITY);
+        }
+        else if (pioneerStatus == BugModeLeft || pioneerStatus == BugModeRight)
+        {
+
+        }
+
+        if (pioneerStatus == GoingToGoal)
+            vel.angular.z = velocityToAngle(goalRelativeTheta);
         else if (pioneerStatus == BugModeLeft || pioneerStatus == BugModeRight)
             vel.angular.z = calculateBugAngularVelocity();
     }
 
-    // Reduz a velocidade linear nas curvas
-    vel.linear.x *= 1 - (fabs(vel.angular.z) / MAX_ANGULAR_VELOCITY);
 
-    ROS_INFO("linear: %.3f        angular: %.3f", vel.linear.x, vel.angular.z);
+    // ROS_INFO("linear: %.3f        angular: %.3f", vel.linear.x, vel.angular.z);
 
     return vel;
 }
@@ -270,14 +311,14 @@ void updatePioneerStatus(double goalRelativeTheta)
 {
     if (pioneerStatus == GoingToGoal)
     {
-        if (distanceFrontRight <= distanceFrontLeft && distanceFrontRight < DISTANCE_START_BUG_MODE)
+        if (goalRelativeTheta < -LASER_FRONT_READ_END && distanceFrontRight <= distanceFrontLeft && distanceFrontRight < DISTANCE_START_BUG_MODE)
             pioneerStatus = BugModeRight;
-        else if (distanceFrontLeft < distanceFrontRight && distanceFrontLeft < DISTANCE_START_BUG_MODE)
+        else if (goalRelativeTheta < LASER_FRONT_READ_END && distanceFrontLeft < distanceFrontRight && distanceFrontLeft < DISTANCE_START_BUG_MODE)
             pioneerStatus = BugModeLeft;
-        else if (goalRelativeTheta <= 0 && distanceDiagonalRight * sin(LASER_DIAGONAL_READ_START) < DISTANCE_START_BUG_MODE)
-            pioneerStatus = BugModeRight;
-        else if (goalRelativeTheta > 0 && distanceDiagonalLeft * sin(LASER_DIAGONAL_READ_START) < DISTANCE_START_BUG_MODE)
-            pioneerStatus = BugModeLeft;
+        // else if (goalRelativeTheta <= 0 && distanceDiagonalRight < DISTANCE_START_BUG_MODE)
+        //     pioneerStatus = BugModeRight;
+        // else if (goalRelativeTheta > 0 && distanceDiagonalLeft < DISTANCE_START_BUG_MODE)
+        //     pioneerStatus = BugModeLeft;
     }
     else if (pioneerStatus == BugModeLeft || pioneerStatus == BugModeRight)
     {
@@ -293,13 +334,7 @@ double calculateTrajectoryLinearVelocity(const double goalDistance)
 
     double linearVelocity =  MAX_LINEAR_VELOCITY;
 
-    // double pointDistance = std::min(goalDistance,
-    //                                 std::min(std::min(distanceFrontLeft, distanceFrontRight) - MIN_OBJECT_DISTANCE,
-    //                                          std::min(distanceDiagonalLeft, distanceDiagonalRight) - (MIN_OBJECT_DISTANCE / 2.5)));
-    //
-    // if (pointDistance <= 0)
-    //   return 0;
-
+    // Reduz a velocidade quando está chegando no objetivo
     if (goalDistance < 2.5)
         linearVelocity -= MAX_LINEAR_VELOCITY * (1 - goalDistance / 2.5);
 
@@ -319,7 +354,7 @@ double calculateTrajectoryLinearVelocity(const double goalDistance)
 }
 
 
-double calculateTrajectoryAngularVelocity( double theta)
+double velocityToAngle(double theta)
 {
     theta = normalizeAngle(theta);
     if (fabs(theta) < YAW_GOAL_TOLERANCE / 2)
@@ -344,6 +379,14 @@ double calculateTrajectoryAngularVelocity( double theta)
     {
         return direcao * angularVelocity;
     }
+}
+
+
+double calculateBugAngularVelocity()
+{
+    ROS_INFO("Start bug: %s", (pioneerStatus == BugModeLeft) ? "left" : "right");
+
+    exit(0);
 }
 
 
