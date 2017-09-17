@@ -59,7 +59,7 @@ struct Position{ double x, y, yaw; };
 
 // Indica se o Pioneer esta contornando um objeto e qual lado esse objeto esta
 enum Status { WaitingForGoal, GoingToGoal, Bug2ModeLeft, Bug2ModeRight };
-Status pioneerStatus = Bug2ModeLeft;
+Status pioneerStatus = Bug2ModeRight;
 // Status pioneerStatus = WaitingForGoal;
 
 Position pioneerPosition, finalGoal;
@@ -119,7 +119,9 @@ int main(int argc, char **argv)
 
         ros::spinOnce();
 
-        if (pioneerStatus == WaitingForGoal)
+        calculateBug2Velocity();
+
+        // if (pioneerStatus == WaitingForGoal)
             continue;
 
         if (is_goalReached() && pioneerStatus != WaitingForGoal)
@@ -188,13 +190,13 @@ void hokuyoCallBack(const sensor_msgs::LaserScan& msg)
         distanceSideBack = getSmallestLaserDistance(-LASER_SIDE_BACK_READ_START, -LASER_SIDE_BACK_READ_END, LASER_ARRAY_SIDE_READING_STEP, msg);
     }
 
-    ROS_INFO("distanceFrontLeft: %.2f", distanceFrontLeft);
-    ROS_INFO("distanceFrontRight: %.2f", distanceFrontRight);
-    ROS_INFO("distanceDiagonalLeft: %.2f", distanceDiagonalLeft);
-    ROS_INFO("distanceDiagonalRight: %.2f", distanceDiagonalRight);
-    ROS_INFO("distanceSideFront: %.2f", distanceSideFront);
-    ROS_INFO("distanceSideMiddle: %.2f", distanceSideMiddle);
-    ROS_INFO("distanceSideBack: %.2f", distanceSideBack);
+    ROS_INFO("distanceFrontLeft: %f", distanceFrontLeft);
+    ROS_INFO("distanceFrontRight: %f", distanceFrontRight);
+    ROS_INFO("distanceDiagonalLeft: %f", distanceDiagonalLeft);
+    ROS_INFO("distanceDiagonalRight: %f", distanceDiagonalRight);
+    ROS_INFO("distanceSideFront: %f", distanceSideFront);
+    ROS_INFO("distanceSideMiddle: %f", distanceSideMiddle);
+    ROS_INFO("distanceSideBack: %f", distanceSideBack);
 }
 
 
@@ -438,15 +440,31 @@ geometry_msgs::Twist calculateBug2Velocity()
     {
         double lateralAngle, lateralAngleFront, lateralAngleBack;
 
+        // Calcula o angulo entre o objeto lateral e a trajetoria do pioneer
         if (isFrontRelevant)
-            lateralAngleFront = ;
+            lateralAngleFront= atan((distanceSideMiddle - lateralDistanceFront) / (sin(LASER_SIDE_FRONT_ANGLE) * distanceSideFront));
+        if (isBackRelevant)
+            lateralAngleBack = atan((distanceSideMiddle - lateralDistanceBack) / (sin(LASER_SIDE_BACK_ANGLE) * distanceSideBack));
+
+
+        if (isFrontRelevant && isBackRelevant)
+            lateralAngle = (lateralAngleFront + lateralAngleBack) / 2;
+        else if (isFrontRelevant)
+            lateralAngle = lateralAngleFront;
+        else
+            lateralAngle = lateralAngleBack;
+
+        ROS_INFO("Angle: %f\n\n\n", lateralAngleBack);
+
+        // if (isFrontRelevant)
+            // lateralAngleFront = ;
     }
     else
     {
         // Nunca deve chegar aqui, os IFs anteriores devem cobrir todas as possibilidade
         vel.linear.x = 0;
         vel.angular.z = 0;
-        ROS_WARNING("O calculo do algoritmo bug 2 chegou em uma condicao nao prevista.");
+        ROS_WARN("O calculo do algoritmo bug 2 chegou em uma condicao nao prevista.");
     }
 
 
