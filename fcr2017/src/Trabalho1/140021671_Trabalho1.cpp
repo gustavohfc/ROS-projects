@@ -297,7 +297,7 @@ geometry_msgs::Twist calculateTrajectoryVelocity()
         }
     }
 
-    ROS_INFO("linear: %f        angular: %f", vel.linear.x, vel.angular.z);
+    // ROS_INFO("linear: %f        angular: %f", vel.linear.x, vel.angular.z);
 
     return vel;
 }
