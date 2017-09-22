@@ -38,23 +38,23 @@ target_link_libraries(forward_kinematics_pioneer ${catkin_LIBRARIES})
 
 
 # Roteiro 1
-add_executable(140021671_direta src/Roteiro1/140021671_direta.cpp)
+add_executable(140021671_direta src/140021671_direta.cpp)
 target_link_libraries(140021671_direta ${catkin_LIBRARIES})
 
-add_executable(140021671_inversa src/Roteiro1/140021671_inversa.cpp)
+add_executable(140021671_inversa src/140021671_inversa.cpp)
 target_link_libraries(140021671_inversa ${catkin_LIBRARIES})
 
 
 # Roteiro 2
-add_executable(140021671_sensor src/Roteiro2/140021671_sensor.cpp)
+add_executable(140021671_sensor src/140021671_sensor.cpp)
 target_link_libraries(140021671_sensor ${catkin_LIBRARIES})
 
 
 # Roteiro 3
-add_executable(140021671_localizacao src/Roteiro3/140021671_localizacao.cpp)
+add_executable(140021671_localizacao src/140021671_localizacao.cpp)
 target_link_libraries(140021671_localizacao ${catkin_LIBRARIES})
 
 
 # Trabalho 1
-add_executable(140021671_Trabalho1 src/Trabalho1/140021671_Trabalho1.cpp)
+add_executable(140021671_Trabalho1 src/140021671_Trabalho1.cpp)
 target_link_libraries(140021671_Trabalho1 ${catkin_LIBRARIES})
