@@ -58,3 +58,8 @@ target_link_libraries(140021671_localizacao ${catkin_LIBRARIES})
 # Trabalho 1
 add_executable(140021671_Trabalho1 src/140021671_Trabalho1.cpp)
 target_link_libraries(140021671_Trabalho1 ${catkin_LIBRARIES})
+
+
+# Roteiro 4
+add_executable(140021671_roteiro4 src/140021671_roteiro4.cpp src/common_lib/common.cpp src/common_lib/odometry.cpp)
+target_link_libraries(140021671_roteiro4 ${catkin_LIBRARIES})
