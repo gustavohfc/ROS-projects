@@ -1,7 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define XY_GOAL_TOLERANCE 0.1 // metros
+#include <deque>
+
+#define XY_GOAL_TOLERANCE 0.2 // metros
 #define YAW_GOAL_TOLERANCE 0.05 // radianos
 
 #define MIN_OBSTACLE_DISTANCE 0.2
@@ -16,8 +18,10 @@
 struct Position
 {
     double x, y, yaw;
-    Position() : x(0), y(0), yaw(0) {}
-    Position(double _x, double _y, double _yaw) : x(_x), y(_y), yaw(_yaw) {}
+    bool hasYaw;
+    Position() : x(0), y(0), yaw(0), hasYaw(false) {}
+    Position(double _x, double _y) : x(_x), y(_y), hasYaw(false) {}
+    Position(double _x, double _y, double _yaw) : x(_x), y(_y), yaw(_yaw), hasYaw(true) {}
 };
 
 // Converte graus para radianos
@@ -27,7 +31,7 @@ enum States { WaitingForGoal, GoingToPoint, Bug2ModeLeft, Bug2ModeRight };
 extern States pioneerState;
 
 // Prototipos
-void updateGoals(std::deque<Position> goals);
+void updateGoals(std::deque<Position>& goals);
 void goToPosition(Position goal, ros::Publisher pub_cmd_vel);
 double calculateLinearVelocity(double distance);
 double calculateAngularVelocity(double angle);

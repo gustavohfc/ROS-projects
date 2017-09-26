@@ -1,5 +1,4 @@
-#include "ros/ros.h"
-#include <deque>
+#include <ros/ros.h>
 
 #include "common.h"
 #include "odometry.h"
@@ -11,15 +10,18 @@ bool is_linearSpeedZero()               { return fabs(currentLinearVelocity) <  
 bool is_angularSpeedZero()              { return fabs(currentAngularVelocity) <  0.0001; }
 bool is_xyReached(double x, double y)   { return fabs(pioneerPosition.x - x) <  XY_GOAL_TOLERANCE && fabs(pioneerPosition.y - y) <  XY_GOAL_TOLERANCE; }
 bool is_yawReached(double yaw)          { return fabs(pioneerPosition.yaw - yaw) <  YAW_GOAL_TOLERANCE; }
-bool is_goalReached(Position p)         { return is_linearSpeedZero() && is_angularSpeedZero() && is_xyReached(p.x, p.y) && is_yawReached(p.yaw); }
+bool is_goalReached(Position p)         { return is_linearSpeedZero() && is_angularSpeedZero() && is_xyReached(p.x, p.y) && (is_yawReached(p.yaw) || !p.hasYaw); }
 
 
-void updateGoals(std::deque<Position> goals)
+void updateGoals(std::deque<Position>& goals)
 {
     if (is_goalReached(goals.front()))
     {
         ROS_INFO("Chegou na posicao (%.2f, %.2f, %.2f).", pioneerPosition.x, pioneerPosition.y, pioneerPosition.yaw);
         goals.pop_front();
+
+        if (!goals.empty())
+            ROS_INFO("Indo para a posicao (%.2f, %.2f, %.2f).", goals.front().x, goals.front().y, goals.front().yaw);
     }
 }
 
@@ -27,16 +29,36 @@ void updateGoals(std::deque<Position> goals)
 void goToPosition(Position goal, ros::Publisher pub_cmd_vel)
 {
     geometry_msgs::Twist vel;
-    double distance, angle; // Informacoes sobre o proximo objetivo, podendo ser ir para o ponto ou desviar de um obstaculo
 
-    // Calcula a distancia em relacao o objetivo
-    double goalDistanceX = goal.x - pioneerPosition.x;
-    double goalDistanceY = goal.y - pioneerPosition.y;
-    distance = hypot(goalDistanceX, goalDistanceY);
-    angle = normalizeAngle(atan2(goalDistanceY, goalDistanceX) - pioneerPosition.yaw);
+    if (is_xyReached(goal.x, goal.y))
+    {
+        vel.linear.x = 0;
+        if (is_yawReached(goal.yaw) || !goal.hasYaw)
+        {
+            vel.angular.z = 0; // Chegou no objetivo
+        }
+        else
+        {
+            // Corrige o angulo final
+            vel.angular.z = calculateAngularVelocity(goal.yaw - pioneerPosition.yaw);
+        }
+    }
+    else
+    {
+        // Calcula a distancia em relacao o objetivo
+        double goalDistanceX = goal.x - pioneerPosition.x;
+        double goalDistanceY = goal.y - pioneerPosition.y;
+        double goalDistance = hypot(goalDistanceX, goalDistanceY);
+        double goalAngle = normalizeAngle(atan2(goalDistanceY, goalDistanceX) - pioneerPosition.yaw);
 
-    vel.linear.x = calculateLinearVelocity(distance);
-    vel.angular.z = calculateAngularVelocity(angle);
+        vel.linear.x = calculateLinearVelocity(goalDistance);
+        vel.angular.z = calculateAngularVelocity(goalAngle);
+
+        // Reduz a velocidade linear nas curvas
+        vel.linear.x *= 1 - (fabs(vel.angular.z) / MAX_ANGULAR_VELOCITY);
+    }
+
+    ROS_DEBUG("Linear: %.2f\t\tAngular: %.2f", vel.linear.x, vel.angular.z);
 
     pub_cmd_vel.publish(vel);
 }
