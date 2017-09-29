@@ -61,5 +61,10 @@ target_link_libraries(forward_kinematics_pioneer ${catkin_LIBRARIES})
 
 
 # Roteiro 4
-add_executable(140021671_roteiro4 src/140021671_roteiro4.cpp src/common_lib/common.cpp src/common_lib/odometry.cpp src/common_lib/graph.cpp)
-target_link_libraries(140021671_roteiro4 ${catkin_LIBRARIES})
+# add_executable(140021671_roteiro4 src/140021671_roteiro4.cpp src/common_lib/common.cpp src/common_lib/odometry.cpp src/common_lib/graph.cpp)
+# target_link_libraries(140021671_roteiro4 ${catkin_LIBRARIES})
+
+
+# Roteiro 5
+add_executable(140021671_roteiro5 src/140021671_roteiro5.cpp src/common_lib/laser_sensor.cpp)
+target_link_libraries(140021671_roteiro5 ${catkin_LIBRARIES})
