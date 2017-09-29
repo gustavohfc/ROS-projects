@@ -1,16 +1,22 @@
 #ifndef LASER_SENSOR_H
 #define LASER_SENSOR_H
 
-enum laserSectionsKeys {laserFrontLeft, laserFrontRight};
+#include <sensor_msgs/LaserScan.h>
 
-// Configura secoes para a leitura da distancia pelo sensor laser
-struct laserConfSections
+class LaserSensor
 {
-  laserSectionsKeys key;
-  double angle1, angle2;
-  int step;
-  laserConfSections(laserSectionsKeys _key, double _angle1, double _angle2, int _step) : key(_key), angle1(_angle1), angle2(_angle2), step(_step) {}
+private:
+    sensor_msgs::LaserScan::ConstPtr msg;
+
+
+public:
+    void init(ros::NodeHandle& nodeHandle, ros::Subscriber subscriber);
+    void callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 };
+
+
+// Global extern variable
+extern LaserSensor laserSensor;
 
 
 #endif
