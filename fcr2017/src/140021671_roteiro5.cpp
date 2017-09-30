@@ -2,6 +2,7 @@
 #include <ros/console.h>
 
 #include "common_lib/laser_sensor.h"
+#include "common_lib/odometer.h"
 
 
 int main(int argc, char **argv)
@@ -17,6 +18,9 @@ int main(int argc, char **argv)
 
 
     laserSensor.init(nodeHandle, laserSubriber);
+    odometer.init(nodeHandle, laserSubriber);
+
+    odometer.getX();
 
     // ros::Subscriber sub = n.subscribe("hokuyo_scan", 1, &LaserSensor::callback, &laserSensor);
 

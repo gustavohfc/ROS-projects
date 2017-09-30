@@ -6,10 +6,11 @@
 class LaserSensor
 {
 private:
-    sensor_msgs::LaserScan::ConstPtr msg;
 
 
 public:
+    sensor_msgs::LaserScan::ConstPtr msg;
+
     void init(ros::NodeHandle& nodeHandle, ros::Subscriber subscriber);
     void callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 };
