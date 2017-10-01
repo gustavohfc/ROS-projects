@@ -27,7 +27,7 @@
 
 
     <!-- Carrega o no responsavel por salvar a imagem do mapa no arquivo fcr2017/mapas/cic.pgm -->
-    <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/mapas/cic" output="screen" />
+    <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic" output="screen" />
 
     <!-- Sincroniza o mapa com o odometro no Rviz -->
     <node pkg="tf" type="static_transform_publisher" name="map_odom" args="0 0 0 0 0 0 /map /odom 100" />
