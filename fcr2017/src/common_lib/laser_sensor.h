@@ -3,6 +3,7 @@
 
 #include <sensor_msgs/LaserScan.h>
 
+
 class LaserSensor
 {
 private:
@@ -11,8 +12,11 @@ private:
 public:
     sensor_msgs::LaserScan::ConstPtr msg;
 
-    void init(ros::NodeHandle& nodeHandle, ros::Subscriber subscriber);
+    void init(ros::NodeHandle& nodeHandle, ros::Subscriber& subscriber);
     void callback(const sensor_msgs::LaserScan::ConstPtr& msg);
+    double atAngle(double angle) const;
+    double getAngleMin() const;
+    double getAngleMax() const;
 };
 
 

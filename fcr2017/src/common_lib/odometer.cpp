@@ -1,4 +1,5 @@
-#include "tf/transform_listener.h"
+#include <tf/transform_listener.h>
+#include <cmath>
 
 #include "odometer.h"
 
@@ -6,7 +7,7 @@
 Odometer odometer;
 
 
-void Odometer::init(ros::NodeHandle& nodeHandle, ros::Subscriber subscriber)
+void Odometer::init(ros::NodeHandle& nodeHandle, ros::Subscriber& subscriber)
 {
     subscriber = nodeHandle.subscribe("pose", 1, &Odometer::callback, this);
 }
@@ -22,6 +23,9 @@ void Odometer::callback(const nav_msgs::Odometry::ConstPtr& msg)
     tf::Pose tfPose;
     tf::poseMsgToTF(msg->pose.pose, tfPose);
     yaw = tf::getYaw(tfPose.getRotation());
+
+    laserSensorX = x + (LASER_SENSOR_DISTANCE_FROM_CENTER * cos(yaw));
+    laserSensorY = y + (LASER_SENSOR_DISTANCE_FROM_CENTER * sin(yaw));
 
     linearVelocity = msg->twist.twist.linear.x;
     angularVelocity = msg->twist.twist.angular.z;

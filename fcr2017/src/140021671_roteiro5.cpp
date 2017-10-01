@@ -22,16 +22,25 @@ int main(int argc, char **argv)
     odometer.init(nodeHandle, odometerSubscriber);
     gridMap.init(nodeHandle);
 
-
-
     ros::Rate loop_rate(60);
 
-    int loop_count = 0; // TEMP
-    while (ros::ok() )
-    {
-        loop_rate.sleep();
+    // ros::Time begin, end;
+    // ros::Duration d;
 
-        // ros::spinOnce();
+    while (ros::ok())
+    {
+        // begin = ros::Time::now();
+        loop_rate.sleep();
+        // end = ros::Time::now();
+        // d = end - begin;
+        // ROS_INFO("%d", d.nsec);
+
+
+        ros::spinOnce();
+
+        // Espera ate ter pelo menos uma leitura do sensor laser
+        if (!laserSensor.msg)
+            continue;
 
         gridMap.update();
     }

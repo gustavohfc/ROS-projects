@@ -5,7 +5,7 @@
 #include "nav_msgs/OccupancyGrid.h"
 
 
-#define GRID_MAP_RESOLUTION 0.5
+#define GRID_MAP_RESOLUTION 0.1
 
 #define GRID_MAP_LIMIT_POSITIVE_X 46
 #define GRID_MAP_LIMIT_NEGATIVE_X -37
@@ -18,9 +18,14 @@
 #define GRID_MAP_MATRIX_OFFSET_X ( (int) ((-1 * GRID_MAP_LIMIT_NEGATIVE_X) / GRID_MAP_RESOLUTION) )
 #define GRID_MAP_MATRIX_OFFSET_Y ( (int) ((-1 * GRID_MAP_LIMIT_NEGATIVE_Y) / GRID_MAP_RESOLUTION) )
 
-#define EMPTY_CELL_VALUE 0
-#define UNDEFINED_CELL_VALUE 50
-#define OCCUPIED_CELL_VALUE 100
+#define EMPTY_CELL 0
+#define UNDEFINED_CELL 50
+#define OCCUPIED_CELL 100
+
+#define GRID_MAP_LASER_ANGLE_STEP 0.0174533 // ~1 grau
+#define GRID_MAP_LASER_POINT_STEP (GRID_MAP_RESOLUTION / 2)
+#define GRID_MAP_LASER_MAX_DISTANCE 5
+
 
 class GridMap
 {
@@ -29,6 +34,7 @@ private:
     ros::Publisher pub;
 
     void sendMapToRviz();
+    void setCell(double angle, double distance, int8_t newValue);
 
 public:
     void init(ros::NodeHandle& nodeHandle);
