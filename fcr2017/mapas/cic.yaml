@@ -1,0 +1,7 @@
+image: /home/gustavo/catkin_ws/src/fcr2017/mapas/cic.pgm
+resolution: 0.100000
+origin: [-37.050000, -9.050000, -nan]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

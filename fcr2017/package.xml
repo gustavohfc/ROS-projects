@@ -28,7 +28,7 @@
   <run_depend>p2os_msgs</run_depend>
   <run_depend>tf</run_depend>
 
-  <!-- Utilizado para carregar a imagem do mapa no Rviz -->
+  <!-- Utilizado para salvar a imagem do mapa -->
   <run_depend>map_server</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->

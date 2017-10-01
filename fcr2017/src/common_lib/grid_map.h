@@ -31,14 +31,15 @@ class GridMap
 {
 private:
     int8_t grid[GRID_MAP_MATRIX_SIZE_Y][GRID_MAP_MATRIX_SIZE_X];
-    ros::Publisher pub;
+    ros::Publisher pub_rviz, pub_saver;
 
-    void sendMapToRviz();
+    void sendMapTo(ros::Publisher& pub);
     void setCell(double angle, double distance, int8_t newValue);
 
 public:
     void init(ros::NodeHandle& nodeHandle);
     void update();
+    void save();
 };
 
 

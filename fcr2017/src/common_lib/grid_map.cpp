@@ -12,7 +12,11 @@ GridMap gridMap;
 
 void GridMap::init(ros::NodeHandle& nodeHandle)
 {
-    pub = nodeHandle.advertise<nav_msgs::OccupancyGrid>("map", 1);
+    // Topico para publicar o mapa no RViz
+    pub_rviz = nodeHandle.advertise<nav_msgs::OccupancyGrid>("map_rviz", 1);
+
+    // Topico para enviar o mapa para o no map_saver
+    pub_saver = nodeHandle.advertise<nav_msgs::OccupancyGrid>("map", 1);
 
     // Marca todas as celulas como indefinido
     for (int x = 0; x < GRID_MAP_MATRIX_SIZE_X; x++)
@@ -39,11 +43,17 @@ void GridMap::update()
             setCell(angle, objectDistance, OCCUPIED_CELL);
     }
 
-    sendMapToRviz();
+    sendMapTo(pub_rviz);
 }
 
 
-void GridMap::sendMapToRviz()
+void GridMap::save()
+{
+    sendMapTo(pub_saver);
+}
+
+
+void GridMap::sendMapTo(ros::Publisher& pub)
 {
     nav_msgs::OccupancyGrid map;
 

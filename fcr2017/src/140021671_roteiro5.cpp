@@ -43,9 +43,11 @@ int main(int argc, char **argv)
             continue;
 
         gridMap.update();
+
+        break;
     }
 
-    // gridMap.save();
+    gridMap.save();
     
     return 0;
 }
