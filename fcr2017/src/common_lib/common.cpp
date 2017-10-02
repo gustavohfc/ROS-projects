@@ -1,15 +1,15 @@
 #include <ros/ros.h>
 
 #include "common.h"
-#include "odometry.h"
+#include "odometer.h"
 
 // Variaveis externas
 States pioneerState = WaitingForGoal;
 
-bool is_linearSpeedZero()               { return fabs(currentLinearVelocity) <  0.0001; }
-bool is_angularSpeedZero()              { return fabs(currentAngularVelocity) <  0.0001; }
-bool is_xyReached(double x, double y)   { return fabs(pioneerPosition.x - x) <  XY_GOAL_TOLERANCE && fabs(pioneerPosition.y - y) <  XY_GOAL_TOLERANCE; }
-bool is_yawReached(double yaw)          { return fabs(pioneerPosition.yaw - yaw) <  YAW_GOAL_TOLERANCE; }
+bool is_linearSpeedZero()               { return fabs(odometer.getLinearVelocity()) <  0.0001; }
+bool is_angularSpeedZero()              { return fabs(odometer.getAngularVelocity()) <  0.0001; }
+bool is_xyReached(double x, double y)   { return fabs(odometer.getX() - x) <  XY_GOAL_TOLERANCE && fabs(odometer.getY() - y) <  XY_GOAL_TOLERANCE; }
+bool is_yawReached(double yaw)          { return fabs(odometer.getYaw() - yaw) <  YAW_GOAL_TOLERANCE; }
 bool is_goalReached(Position p)         { return is_linearSpeedZero() && is_angularSpeedZero() && is_xyReached(p.x, p.y) && (is_yawReached(p.yaw) || !p.hasYaw); }
 
 
@@ -17,7 +17,7 @@ void updateGoals(std::deque<Position>& goals)
 {
     if (is_goalReached(goals.front()))
     {
-        ROS_INFO("Chegou na posicao (%.2f, %.2f, %.2f).", pioneerPosition.x, pioneerPosition.y, pioneerPosition.yaw);
+        ROS_INFO("Chegou na posicao (%.2f, %.2f, %.2f).", odometer.getX(), odometer.getY(), odometer.getYaw());
         goals.pop_front();
 
         if (!goals.empty())
@@ -40,16 +40,16 @@ void goToPosition(Position goal, ros::Publisher pub_cmd_vel)
         else
         {
             // Corrige o angulo final
-            vel.angular.z = calculateAngularVelocity(goal.yaw - pioneerPosition.yaw);
+            vel.angular.z = calculateAngularVelocity(goal.yaw - odometer.getYaw());
         }
     }
     else
     {
         // Calcula a distancia em relacao o objetivo
-        double goalDistanceX = goal.x - pioneerPosition.x;
-        double goalDistanceY = goal.y - pioneerPosition.y;
+        double goalDistanceX = goal.x - odometer.getX();
+        double goalDistanceY = goal.y - odometer.getY();
         double goalDistance = hypot(goalDistanceX, goalDistanceY);
-        double goalAngle = normalizeAngle(atan2(goalDistanceY, goalDistanceX) - pioneerPosition.yaw);
+        double goalAngle = normalizeAngle(atan2(goalDistanceY, goalDistanceX) - odometer.getYaw());
 
         vel.linear.x = calculateLinearVelocity(goalDistance);
         vel.angular.z = calculateAngularVelocity(goalAngle);

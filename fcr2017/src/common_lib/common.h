@@ -37,4 +37,6 @@ double calculateLinearVelocity(double distance);
 double calculateAngularVelocity(double angle);
 double normalizeAngle(double angle);
 
+bool is_goalReached(Position p);
+
 #endif

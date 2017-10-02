@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <ros/console.h>
 
+#include "common_lib/common.h"
 #include "common_lib/laser_sensor.h"
 #include "common_lib/odometer.h"
 #include "common_lib/grid_map.h"
@@ -13,28 +14,23 @@ int main(int argc, char **argv)
     ros::Subscriber laserSubriber, odometerSubscriber;
 
     // Set debug verbosity level
-    if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug)) {
-        ros::console::notifyLoggerLevelsChanged();
-    }
+    // if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug)) {
+    //     ros::console::notifyLoggerLevelsChanged();
+    // }
 
+    ros::Publisher pub_cmd_vel = nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
     laserSensor.init(nodeHandle, laserSubriber);
     odometer.init(nodeHandle, odometerSubscriber);
     gridMap.init(nodeHandle);
 
-    ros::Rate loop_rate(60);
+    Position goal(39, 0);
 
-    // ros::Time begin, end;
-    // ros::Duration d;
+    ros::Rate loop_rate(60);
 
     while (ros::ok())
     {
-        // begin = ros::Time::now();
         loop_rate.sleep();
-        // end = ros::Time::now();
-        // d = end - begin;
-        // ROS_INFO("%d", d.nsec);
-
 
         ros::spinOnce();
 
@@ -44,10 +40,13 @@ int main(int argc, char **argv)
 
         gridMap.update();
 
-        break;
+        if (is_goalReached(goal))
+            break;
+
+        goToPosition(goal, pub_cmd_vel);
     }
 
     gridMap.save();
-    
+
     return 0;
 }
