@@ -6,16 +6,20 @@
 
 #define LASER_SENSOR_DISTANCE_FROM_CENTER 0.2
 
+
 class Odometer
 {
 private:
     nav_msgs::Odometry::ConstPtr msg;
-    double x, y, yaw;
-    double laserSensorX, laserSensorY;
-    double linearVelocity, angularVelocity;
+    ros::Subscriber sub_odom;
+    double x, y; // Pioneer absolute position
+    double yaw; // Pioneer absolute orientation
+    double laserSensorX, laserSensorY; // Pioneer's laser sensor absolute position
+    double linearVelocity, angularVelocity; // Pioneer absolute velocity
 
 public:
-    void init(ros::NodeHandle& nodeHandle, ros::Subscriber& subscriber);
+    Odometer(ros::NodeHandle& nodeHandle);
+
     void callback(const nav_msgs::Odometry::ConstPtr& msg);
 
     double getX()               const { return x; };
@@ -26,10 +30,6 @@ public:
     double getLinearVelocity()  const { return linearVelocity; };
     double getAngularVelocity() const { return angularVelocity; };
 };
-
-
-// Global extern variable
-extern Odometer odometer;
 
 
 #endif

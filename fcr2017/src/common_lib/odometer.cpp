@@ -3,13 +3,10 @@
 
 #include "odometer.h"
 
-// Global extern variable
-Odometer odometer;
 
-
-void Odometer::init(ros::NodeHandle& nodeHandle, ros::Subscriber& subscriber)
+Odometer::Odometer(ros::NodeHandle& nodeHandle)
 {
-    subscriber = nodeHandle.subscribe("pose", 1, &Odometer::callback, this);
+    sub_odom = nodeHandle.subscribe("pose", 1, &Odometer::callback, this);
 }
 
 
