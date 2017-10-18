@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+	<node ns="node_A" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_A" output="screen" />
+	<node ns="node_B" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_B" output="screen" />
+	<node ns="node_C" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_C" output="screen" />
+	<node ns="node_D" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_D" output="screen" />
+	<node ns="node_E" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_E" output="screen" />
+	<node ns="node_F" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_F" output="screen" />
+	<node ns="node_G" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_G" output="screen" />
+	<node ns="node_H" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_H" output="screen" />
+	<node ns="node_I" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_I" output="screen" />
+	<node ns="node_J" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_J" output="screen" />
+	<node ns="node_K" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_K" output="screen" />
+	<node ns="node_L" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_L" output="screen" />
+	<node ns="node_M" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_M" output="screen" />
+	<node ns="node_N" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_N" output="screen" />
+	<node ns="node_O" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_O" output="screen" />
+	<node ns="node_P" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_P" output="screen" />
+	<node ns="node_Q" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_Q" output="screen" />
+	<node ns="node_R" name="map_saver_node" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic_node_R" output="screen" />
+
+</launch>
