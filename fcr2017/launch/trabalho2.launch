@@ -7,7 +7,7 @@
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch" >
         <!-- To use this world go to https://github.com/Gastd/cic and download the model -->
-        <arg name="world_name" value="$(find fcr2017)/worlds/cic/cic.world"/>
+        <!-- <arg name="world_name" value="$(find fcr2017)/worlds/cic/cic.world"/> -->
     </include>
 
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(find fcr2017)/robots/pioneer3at.gazebo.xacro" />
@@ -28,14 +28,14 @@
 
     <!-- Carrega o no responsavel por salvar a imagem do mapa no arquivo fcr2017/mapas/cic.pgm -->
     <!-- <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic" output="screen" /> -->
-    <include file="$(find fcr2017)/launch/map_saver.launch" />
+    <!-- <include file="$(find fcr2017)/launch/map_saver.launch" /> -->
 
     <!-- Sincroniza o mapa com o odometro no Rviz -->
     <node pkg="tf" type="static_transform_publisher" name="map_odom" args="0 0 0 0 0 0 /map /odom 100" />
 
     <!-- Abre o Rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/roteiro5.rviz"/>
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/roteiro5.rviz"/> -->
 
     
-    <node name="roteiro5" pkg="fcr2017" type="140021671_roteiro5" output="screen" />
+    <!-- <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" output="screen" /> -->
 </launch>

@@ -74,5 +74,5 @@ target_link_libraries(forward_kinematics_pioneer ${catkin_LIBRARIES})
 # target_link_libraries(140021671_roteiro6 ${catkin_LIBRARIES})
 
 # Trabalho 2
-add_executable(140021671_Trabalho2 src/140021671_Trabalho2.cpp src/common_lib/odometer.cpp src/common_lib/motion_controller.cpp)
+add_executable(140021671_Trabalho2 src/140021671_Trabalho2.cpp src/common_lib/odometer.cpp src/common_lib/motion_controller.cpp src/common_lib/common.cpp)
 target_link_libraries(140021671_Trabalho2 ${catkin_LIBRARIES})
