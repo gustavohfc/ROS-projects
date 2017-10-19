@@ -2,11 +2,7 @@
 
 #include "laser_sensor.h"
 
-// Global extern variable
-LaserSensor laserSensor;
-
-
-void LaserSensor::init(ros::NodeHandle& nodeHandle, ros::Subscriber& subscriber)
+LaserSensor::LaserSensor(ros::NodeHandle& nodeHandle)
 {
     subscriber = nodeHandle.subscribe("hokuyo_scan", 1, &LaserSensor::callback, this);
 }

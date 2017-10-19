@@ -19,7 +19,7 @@ struct Position
 enum PioneerPossibleState { GoingToXY, GoingToYaw, AvoidingObstacle, GoalReached };
 struct PioneerState
 {
-	PioneerState(PioneerPossibleState _state) : state(_state) {}
+	PioneerState(PioneerPossibleState start_state) : state(start_state) {}
 
 	PioneerPossibleState state;
 

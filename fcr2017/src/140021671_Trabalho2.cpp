@@ -2,6 +2,7 @@
 #include <ros/console.h>
 
 #include "common_lib/odometer.h"
+#include "common_lib/laser_sensor.h"
 #include "common_lib/motion_controller.h"
 
 
@@ -19,6 +20,7 @@ int main(int argc, char **argv)
     // Initialize objects
     PioneerState current_state(GoingToXY);
     Odometer odometer(nodeHandle);
+    LaserSensor laser_sensor(nodeHandle);
     MotionController motion_controller(nodeHandle, current_state, odometer);
 
 
