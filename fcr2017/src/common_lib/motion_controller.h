@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "odometer.h"
+#include "laser_sensor.h"
 
 
 #define XY_GOAL_TOLERANCE 0.1 // metros
@@ -18,6 +19,14 @@
 #define MAX_ANGULAR_VELOCITY 0.7 // m/s
 #define MIN_ANGULAR_VELOCITY 0.2 // m/s
 
+#define FRONT_LASER_ANGLE 30
+#define GOAL_LASER_ANGLE 1.0
+
+#define START_OBSTACLE_AVOIDING_DISTANCE 1
+#define OBSTACLE_AVOIDING_AVERAGE_DISTANCE 0.7
+#define OBSTACLE_BUG_TOLERANCE 0.05
+#define OBSTACLE_CRITIAL_DISTANCE 0.4
+
 
 class MotionController
 {
@@ -26,16 +35,17 @@ private:
     ros::Publisher pub_vel;
     PioneerState& current_state;
     const Odometer& odometer;
+    const LaserSensor& laser_sensor;
 
-    void applyVelocityLimits(geometry_msgs::Twist& velocity);
     void updateState();
     double calculateLinearVelocity(double distance);
     double calculateAngularVelocity(double angle);
-    void verifyObstacle();
+    void checkObstacles(double goal_distance, double goal_angle);
+    void calculateVelocityAvoidingObstacle(geometry_msgs::Twist& velocity);
 
 
 public:
-    MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer);
+    MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor);
 
     void addGoal(Position new_goal);
     bool hasGoals();

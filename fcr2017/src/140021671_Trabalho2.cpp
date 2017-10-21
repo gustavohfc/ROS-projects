@@ -21,15 +21,11 @@ int main(int argc, char **argv)
     PioneerState current_state(GoingToXY);
     Odometer odometer(nodeHandle);
     LaserSensor laser_sensor(nodeHandle);
-    MotionController motion_controller(nodeHandle, current_state, odometer);
-
+    MotionController motion_controller(nodeHandle, current_state, odometer, laser_sensor);
 
 
     // temp
-    motion_controller.addGoal(Position(1, 0));
-    motion_controller.addGoal(Position(1, 1));
-    motion_controller.addGoal(Position(0, 1));
-    motion_controller.addGoal(Position(0, 0));
+    motion_controller.addGoal(Position(-27, 4.5));
 
     ros::Rate loop_rate(60);
 
@@ -39,19 +35,18 @@ int main(int argc, char **argv)
 
         ros::spinOnce();
 
-        // Espera ate ter pelo menos uma leitura do sensor laser
-        // if (!laserSensor.msg)
-        //     continue;
-
-        // gridMap.update();
+        // Wait until receive at least one message from the laser sensor
+        if (!laser_sensor.msg)
+            continue;
 
         motion_controller.goToGoal();
 
         if (!motion_controller.hasGoals())
             break;
+
+        ROS_DEBUG("\n\n\n\n");
     }
 
-    // gridMap.save();
     loop_rate.sleep();
 
     return 0;

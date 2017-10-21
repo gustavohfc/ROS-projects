@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "motion_controller.h"
 
 inline bool is_velocity_zero(double velocity)   { return ((velocity < 0) ? -velocity : velocity) < VELOCITY_TOLERANCE; }
@@ -6,8 +8,8 @@ inline bool is_yaw_reached(double yaw)          { return ((yaw < 0) ? -yaw : yaw
 
 
 
-MotionController::MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer)
-    : odometer(_odometer), current_state(_current_state)
+MotionController::MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor)
+    : odometer(_odometer), current_state(_current_state), laser_sensor(_laser_sensor)
 {
     // Initialize topic publisher
     pub_vel = nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1);
@@ -36,16 +38,18 @@ void MotionController::goToGoal()
     updateState();
 
     // Calculate distance to goal
-    double goalDistanceX = goals.front().x - odometer.getX();
-    double goalDistanceY = goals.front().y - odometer.getY();
-    double goalDistance = hypot(goalDistanceX, goalDistanceY);
-    double goalAngle = normalizeAngle(atan2(goalDistanceY, goalDistanceX) - odometer.getYaw());
+    double goal_distance_x = goals.front().x - odometer.getX();
+    double goal_distance_y = goals.front().y - odometer.getY();
+    double goal_distance = hypot(goal_distance_x, goal_distance_y);
+    double goal_angle = normalizeAngle(atan2(goal_distance_y, goal_distance_x) - odometer.getYaw());
+
+    checkObstacles(goal_distance, goal_angle);
 
     switch(current_state.state)
     {
         case GoingToXY:
-            velocity.linear.x = calculateLinearVelocity(goalDistance);
-            velocity.angular.z = calculateAngularVelocity(goalAngle);
+            velocity.linear.x = calculateLinearVelocity(goal_distance);
+            velocity.angular.z = calculateAngularVelocity(goal_angle);
 
             //Reduz a velocidade linear nas curvas
             velocity.linear.x *= 1 - (fabs(velocity.angular.z) / MAX_ANGULAR_VELOCITY);
@@ -57,6 +61,7 @@ void MotionController::goToGoal()
             break;
 
         case AvoidingObstacle:
+            calculateVelocityAvoidingObstacle(velocity);
             break;
 
         case GoalReached:
@@ -174,11 +179,135 @@ void MotionController::updateState()
 
 
 
-void MotionController::verifyObstacle()
-{}
-
-
-
-void MotionController::applyVelocityLimits(geometry_msgs::Twist& velocity)
+void MotionController::checkObstacles(double goal_distance, double goal_angle)
 {
+    double front_left_object_distance = laser_sensor.getShortestDistance(0, degreesToRadians(FRONT_LASER_ANGLE));
+
+    double wide_left_object_distance = std::min(front_left_object_distance,
+                                             laser_sensor.getShortestDistance(degreesToRadians(FRONT_LASER_ANGLE), degreesToRadians(90)));
+
+    double front_right_object_distance = laser_sensor.getShortestDistance(0, degreesToRadians(-FRONT_LASER_ANGLE));
+
+    double wide_right_object_distance = std::min(front_right_object_distance,
+                                              laser_sensor.getShortestDistance(degreesToRadians(-FRONT_LASER_ANGLE), degreesToRadians(-90)));
+
+    double goal_object_distance = laser_sensor.getShortestDistance(goal_angle - degreesToRadians(GOAL_LASER_ANGLE / 2),
+                                                                 goal_angle + degreesToRadians(GOAL_LASER_ANGLE / 2));
+
+    double goal_perpendicular_object_distance = fabs(sin(goal_angle) * goal_object_distance);
+
+    // Check if it's necessary to avoid obstacle
+    if (front_left_object_distance          < START_OBSTACLE_AVOIDING_DISTANCE                              ||
+        front_right_object_distance         < START_OBSTACLE_AVOIDING_DISTANCE                              ||
+        // goal_perpendicular_object_distance  < OBSTACLE_AVOIDING_AVERAGE_DISTANCE + OBSTACLE_BUG_TOLERANCE   ||
+        wide_left_object_distance           < OBSTACLE_CRITIAL_DISTANCE                                     ||
+        wide_right_object_distance          < OBSTACLE_CRITIAL_DISTANCE)
+    {
+        // Save information for the obstacle avoidance method
+        current_state.AvoidingObstacleInfo.goal_distance = goal_distance;
+        current_state.AvoidingObstacleInfo.goal_angle = goal_angle;
+        current_state.AvoidingObstacleInfo.front_left_object_distance = front_left_object_distance;
+        current_state.AvoidingObstacleInfo.wide_left_object_distance = wide_left_object_distance;
+        current_state.AvoidingObstacleInfo.front_right_object_distance = front_right_object_distance;
+        current_state.AvoidingObstacleInfo.wide_right_object_distance = wide_right_object_distance;
+        current_state.AvoidingObstacleInfo.goal_object_distance = goal_object_distance;
+        current_state.AvoidingObstacleInfo.goal_perpendicular_object_distance = goal_perpendicular_object_distance;
+
+        if (current_state.state != AvoidingObstacle)
+        {
+            // Save previous state
+            current_state.AvoidingObstacleInfo.previous_state = current_state.state;
+
+            // Update state
+            current_state.state = AvoidingObstacle;
+        }
+    }
+    else
+    {
+        if (current_state.state == AvoidingObstacle)
+        {
+            // Stop the obstacle avoidance
+            current_state.state = current_state.AvoidingObstacleInfo.previous_state;
+        }
+    }
+}
+
+
+
+void MotionController::calculateVelocityAvoidingObstacle(geometry_msgs::Twist& velocity)
+{
+    // Verify if the distance is critial
+    if (current_state.AvoidingObstacleInfo.front_left_object_distance  < OBSTACLE_CRITIAL_DISTANCE ||
+        current_state.AvoidingObstacleInfo.front_right_object_distance < OBSTACLE_CRITIAL_DISTANCE ||
+        current_state.AvoidingObstacleInfo.wide_left_object_distance   < OBSTACLE_CRITIAL_DISTANCE ||
+        current_state.AvoidingObstacleInfo.wide_right_object_distance  < OBSTACLE_CRITIAL_DISTANCE)
+    {
+        ROS_DEBUG("Critial object distance");
+
+        if (current_state.AvoidingObstacleInfo.wide_left_object_distance > current_state.AvoidingObstacleInfo.wide_right_object_distance)
+        {
+            velocity.linear.x = 0;
+            velocity.angular.z = MIN_ANGULAR_VELOCITY;
+        }
+        else
+        {
+            velocity.linear.x = 0;
+            velocity.angular.z = -MIN_ANGULAR_VELOCITY;
+        }
+    }
+    else
+    {
+        // If front is clear then do the Bug 0 algorithm and the goal angle is inside the laser sensor readings
+        // if (current_state.AvoidingObstacleInfo.front_left_object_distance  > OBSTACLE_AVOIDING_AVERAGE_DISTANCE  &&
+        //     current_state.AvoidingObstacleInfo.front_right_object_distance > OBSTACLE_AVOIDING_AVERAGE_DISTANCE  &&
+        //     current_state.AvoidingObstacleInfo.goal_object_distance != std::numeric_limits<double>::max())
+        // {
+        //     ROS_DEBUG("Bug algorithm");
+
+        //     velocity.linear.x = MIN_LINEAR_VELOCITY;
+
+        //     if (current_state.AvoidingObstacleInfo.goal_perpendicular_object_distance < OBSTACLE_AVOIDING_AVERAGE_DISTANCE - OBSTACLE_BUG_TOLERANCE)
+        //         velocity.angular.z = ((current_state.AvoidingObstacleInfo.goal_angle < 0) ? 1 : -1) * MIN_LINEAR_VELOCITY;
+
+        //     else if (current_state.AvoidingObstacleInfo.goal_perpendicular_object_distance < OBSTACLE_AVOIDING_AVERAGE_DISTANCE - OBSTACLE_BUG_TOLERANCE)
+        //         velocity.angular.z = ((current_state.AvoidingObstacleInfo.goal_angle < 0) ? -1 : 1) * MIN_LINEAR_VELOCITY;
+
+        //     else
+        //         velocity.angular.z = 0;
+        // }
+
+        // If only one side is blocked then go to the clear side
+        /*else*/ if (current_state.AvoidingObstacleInfo.front_left_object_distance > START_OBSTACLE_AVOIDING_DISTANCE)
+        {
+            ROS_DEBUG("Turning left");
+            velocity.linear.x = MIN_LINEAR_VELOCITY;
+            velocity.angular.z = MIN_ANGULAR_VELOCITY;
+        }
+        else if(current_state.AvoidingObstacleInfo.front_right_object_distance > START_OBSTACLE_AVOIDING_DISTANCE)
+        {
+            ROS_DEBUG("Turning right");
+            velocity.linear.x = MIN_LINEAR_VELOCITY;
+            velocity.angular.z = -MIN_ANGULAR_VELOCITY;
+        }
+
+        // If both sides are blocked then stop and find the closest espace angle
+        else
+        {
+            ROS_DEBUG("Front blocked");
+
+            velocity.linear.x = 0;
+
+            for (double angle = 0; angle < laser_sensor.getAngleMax(); angle += degreesToRadians(1))
+            {
+                if (laser_sensor.atAngle(angle) > START_OBSTACLE_AVOIDING_DISTANCE)
+                {
+                    velocity.angular.z = MIN_ANGULAR_VELOCITY;
+                }
+                else if (laser_sensor.atAngle(-angle) > START_OBSTACLE_AVOIDING_DISTANCE)
+                {
+                    velocity.angular.z = -MIN_ANGULAR_VELOCITY;
+                }
+            }
+        }
+    }
 }

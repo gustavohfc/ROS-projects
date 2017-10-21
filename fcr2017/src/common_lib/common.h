@@ -19,13 +19,22 @@ struct Position
 enum PioneerPossibleState { GoingToXY, GoingToYaw, AvoidingObstacle, GoalReached };
 struct PioneerState
 {
-	PioneerState(PioneerPossibleState start_state) : state(start_state) {}
+    PioneerState(PioneerPossibleState start_state) : state(start_state) {}
 
-	PioneerPossibleState state;
+    PioneerPossibleState state;
 
-	union
-	{
-	} state_info;
+    // Stores specific information for some states
+    union
+    {
+        struct
+        {
+            double goal_distance, goal_angle;
+            double front_left_object_distance, wide_left_object_distance;
+            double front_right_object_distance, wide_right_object_distance;
+            double goal_object_distance, goal_perpendicular_object_distance;
+            PioneerPossibleState previous_state; // Used to restore the previous state
+        } AvoidingObstacleInfo;
+    };
 };
 
 
