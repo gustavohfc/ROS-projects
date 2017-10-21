@@ -4,6 +4,7 @@
 #include "common_lib/odometer.h"
 #include "common_lib/laser_sensor.h"
 #include "common_lib/motion_controller.h"
+#include "common_lib/graph.h"
 
 
 int main(int argc, char **argv)
@@ -16,13 +17,21 @@ int main(int argc, char **argv)
         ros::console::notifyLoggerLevelsChanged();
     }
 
+    if (argc != 2)
+    {
+        ROS_ERROR("Numero de parametros invalido, deve ser passado apenas um parametro correspondente ao caminho para o arquivo de informacoes do grafo");
+        exit(EXIT_FAILURE);
+    }
+
 
     // Initialize objects
     PioneerState current_state(GoingToXY);
     Odometer odometer(nodeHandle);
     LaserSensor laser_sensor(nodeHandle);
     MotionController motion_controller(nodeHandle, current_state, odometer, laser_sensor);
+    Graph graph(argv[1]);
 
+    return 0;
 
     // temp
     motion_controller.addGoal(Position(-27, 4.5));

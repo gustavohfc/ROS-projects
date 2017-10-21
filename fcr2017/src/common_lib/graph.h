@@ -5,34 +5,46 @@
 #include <deque>
 #include "common.h"
 
+struct Node;
 
-enum graphNodesName { A = 0, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, endGraphNodesNameEnum };
 
-
-struct nodeInfo
+struct Edge
 {
-    double x, y, xTolerance, yTolerance;
+    Edge(Node *_dest_node, double _cost)
+        : dest_node(_dest_node), cost(_cost) {}
+    Node *dest_node;
+    double cost;
+};
+
+
+struct Node
+{
+    Node(char _ID, double _center_x, double _center_y, double _tolerance_x, double _tolerance_y)
+        : ID(_ID), center(Position(_center_x, _center_y)), tolerance_x(_tolerance_x), tolerance_y(_tolerance_y) {}
+
+    char ID;
+    Position center;
+    double tolerance_x, tolerance_y;
+    std::vector<Edge> edges;
 };
 
 
 class Graph
 {
 private:
-    double graphAdj[endGraphNodesNameEnum][endGraphNodesNameEnum];
-    nodeInfo graphNodes[endGraphNodesNameEnum];
+    std::vector<Node> nodes;
 
-    void clearGraphAdj();
-    void addCicNodes();
-    void addCicEdges();
-    void addBidirectionalEdge(graphNodesName node1, graphNodesName node2, double distance);
-    void addEdge(graphNodesName from, graphNodesName to, double distance);
-    void addNodeInfo(graphNodesName node, double x, double y, double xTolerance, double yTolerance);
+    void addNode(char ID, double center_x, double center_y, double tolerance_x, double tolerance_y);
+    void addBidirectionalEdge(char ID_node_1, char ID_node_2, double cost);
+    void addEdge(char ID_node_1, char ID_node_2, double cost);
+    Node* getNode(char ID, bool must_exist = true);
+
 
 
 public:
-    Graph();
-    graphNodesName getCurrentNode();
-    void findPathDijkstra(std::deque<Position>& goals);
+    Graph(const char *file_name);
+    // graphNodesName getCurrentNode();
+    // void findPathDijkstra(std::deque<Position>& goals);
 };
 
 #endif

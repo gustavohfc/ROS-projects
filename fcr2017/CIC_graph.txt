@@ -1,0 +1,42 @@
+###         NAME(ID)    CENTER_POINT_X  CENTER_POINT_Y  X_TOLERANCE Y_TOLERANCE
+NODE_INFO       A           -27.38          17.67           1.31        1.31
+NODE_INFO       B           -27.20          8.67            1.31        7.15
+NODE_INFO       C           -27.18          -.19            1.31        1.31
+NODE_INFO       D           -14.09          17.58           11          1.31
+NODE_INFO       E           -14.01          -.17            11          1.31
+NODE_INFO       F           -0.96           17.60           1.31        1.31
+NODE_INFO       G           -0.78           8.75            1.31        7.15
+NODE_INFO       H           -0.50           -.22            1.31        1.31
+NODE_INFO       I           7.74            17.76           6.66        1.31
+NODE_INFO       J           8.05            -.22            6.66        1.31
+NODE_INFO       K           19.07           17.83           3.48        1.31
+NODE_INFO       L           19.12           8.69            3.48        7.15
+NODE_INFO       M           18.98           -.27            3.48        1.31
+NODE_INFO       N           30.62           17.74           6.66        1.31
+NODE_INFO       O           30.20           -.23            6.66        1.31
+NODE_INFO       P           38.71           17.72           1.31        1.31
+NODE_INFO       Q           38.87           8.86            1.31        7.15
+NODE_INFO       R           38.61           -.23            1.31        1.31
+
+
+###         NODE_NAME   NODE_NAME   COST
+EDGE_INFO   A           B           18
+EDGE_INFO   A           D           26
+EDGE_INFO   D           F           29
+EDGE_INFO   F           G           19
+EDGE_INFO   F           I           20
+EDGE_INFO   I           K           21
+EDGE_INFO   K           L           18
+EDGE_INFO   K           N           24
+EDGE_INFO   N           P           18
+EDGE_INFO   P           Q           18
+EDGE_INFO   Q           R           18
+EDGE_INFO   R           O           18
+EDGE_INFO   O           M           24
+EDGE_INFO   M           L           18
+EDGE_INFO   M           J           23
+EDGE_INFO   J           H           20
+EDGE_INFO   H           G           19
+EDGE_INFO   H           E           28
+EDGE_INFO   E           C           27
+EDGE_INFO   C           B           19
