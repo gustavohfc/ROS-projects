@@ -221,7 +221,7 @@ std::vector<Position> Graph::Dijkstra(char dest_node_ID)
         }
     }
 
-    ROS_ERROR("a");
+    ROS_ERROR("Path not found");
     exit(EXIT_FAILURE);
 }
 

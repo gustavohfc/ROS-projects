@@ -37,5 +37,5 @@
     <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/roteiro5.rviz"/> -->
 
     
-    <!-- <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" output="screen" /> -->
+    <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" args="$(find fcr2017)/CIC_graph.txt" output="screen" />
 </launch>

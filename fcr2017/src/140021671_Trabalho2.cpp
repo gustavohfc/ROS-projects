@@ -16,7 +16,7 @@ void goToInitialPosition(Graph& graph, MotionController& motion_controller, Pion
     char initial_node_ID;
 
     // Get the initial node
-    std::cout << "Digite o nó inicial <A - R>: ";
+    std::cout << "\n\n\n\n\n\n\nDigite o nó inicial <A - R>: ";
     std::cin >> initial_node_ID;
     while (std::cin.fail() || graph.getNode(initial_node_ID, false) == NULL)
     {
@@ -59,12 +59,16 @@ int main(int argc, char **argv)
         ros::console::notifyLoggerLevelsChanged();
     }
 
+
+    // Wait for all messages from other nodes be displayed in the terminal
+    ros::Duration(1).sleep();
+
+
     if (argc != 2)
     {
         ROS_ERROR("Numero de parametros invalido, deve ser passado apenas um parametro correspondente ao caminho para o arquivo de informacoes do grafo");
         exit(EXIT_FAILURE);
     }
-
 
     // Initialize objects
     PioneerState current_state(WaitingGoal);
@@ -103,6 +107,9 @@ int main(int argc, char **argv)
     // }
 
     // loop_rate.sleep();
+
+    // Wait to make sure all messages were send
+    ros::Duration(1).sleep();
 
     return 0;
 }
