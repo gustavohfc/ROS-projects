@@ -10,7 +10,6 @@
 class Odometer
 {
 private:
-    nav_msgs::Odometry::ConstPtr msg;
     ros::Subscriber sub_odom;
     double x, y; // Pioneer absolute position
     double yaw; // Pioneer absolute orientation
@@ -18,6 +17,8 @@ private:
     double linearVelocity, angularVelocity; // Pioneer absolute velocity
 
 public:
+    nav_msgs::Odometry::ConstPtr msg;
+
     Odometer(ros::NodeHandle& nodeHandle);
 
     void callback(const nav_msgs::Odometry::ConstPtr& msg);

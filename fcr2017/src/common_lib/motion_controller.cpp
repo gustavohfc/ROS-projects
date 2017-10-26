@@ -24,6 +24,13 @@ void MotionController::addGoal(Position new_goal)
 
 
 
+void MotionController::addGoals(std::vector<Position> new_goals)
+{
+    goals.insert(goals.end(), new_goals.begin(), new_goals.end());
+}
+
+
+
 bool MotionController::hasGoals()
 {
     return !goals.empty();
@@ -68,15 +75,20 @@ void MotionController::goToGoal()
             velocity.linear.x = 0;
             velocity.angular.z = 0;
 
-            ROS_INFO("Chegou na posiao (%f, %f, %f)", odometer.getX(), odometer.getY(), odometer.getYaw());
+            if (goals[0].hasNode_ID)
+                ROS_INFO("Chegou na posiao (%f, %f, %f) - No %c", odometer.getX(), odometer.getY(), odometer.getYaw(), goals[0].node_ID);
+            else
+                ROS_INFO("Chegou na posiao (%f, %f, %f)", odometer.getX(), odometer.getY(), odometer.getYaw());
 
             goals.erase(goals.begin());
 
             if(hasGoals())
             {
-                ROS_INFO("Indo para a posiao (%f, %f, %f)", goals.front().x, goals.front().y, goals.front().yaw);
+                ROS_INFO("Proximos objetivos: [ %s ]", getGoalsString().c_str());
                 current_state.state = GoingToXY;
             }
+            else
+                current_state.state = GoalReached;
 
             break;
 
@@ -310,4 +322,24 @@ void MotionController::calculateVelocityAvoidingObstacle(geometry_msgs::Twist& v
             }
         }
     }
+}
+
+
+
+std::string MotionController::getGoalsString()
+{
+    std::string goals_string;
+
+    for(std::vector<Position>::iterator it = goals.begin(); it != goals.end(); ++it)
+    {
+        if (it != goals.begin())
+            goals_string += " -> ";
+
+        if (it->hasNode_ID)
+            goals_string += it->node_ID;
+        else
+            goals_string += "NOT IMPLEMENTED YET";
+    }
+
+    return goals_string;
 }

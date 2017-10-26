@@ -2,6 +2,7 @@
 #define MOTION_CONTROLLER_H
 
 #include <vector>
+#include <string>
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 
@@ -48,8 +49,10 @@ public:
     MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor);
 
     void addGoal(Position new_goal);
+    void addGoals(std::vector<Position> new_goals);
     bool hasGoals();
     void goToGoal();
+    std::string getGoalsString();
 };
 
 

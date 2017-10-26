@@ -6,7 +6,8 @@
 #include "graph.h"
 
 
-Graph::Graph(const char *file_name)
+Graph::Graph(const char *file_name, const Odometer& _odometer)
+    : odometer(_odometer)
 {
     std::ifstream graph_file(file_name);
     std::string line;
@@ -18,6 +19,7 @@ Graph::Graph(const char *file_name)
         exit(EXIT_FAILURE);
     }
 
+    // Read the graph definition file
     while (std::getline(graph_file, line))
     {
         bool bad_line_parse = false;
@@ -29,6 +31,7 @@ Graph::Graph(const char *file_name)
 
         std::string line_type;
         line_stream >> line_type;
+
         if (line_type.compare("NODE_INFO") == 0)
         {
             char ID;
@@ -120,80 +123,105 @@ Node* Graph::getNode(char ID, bool must_exist)
 
 
 
+int Graph::getNodeIndex(char ID)
+{
+    for(std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
+        if (it->ID == ID)
+            return it - nodes.begin();
+    }
+}
 
 
 
+Node* Graph::getCurrentNode()
+{
+    for(std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
+        if (odometer.getX() < it->center.x + it->tolerance_x &&
+            odometer.getX() > it->center.x - it->tolerance_x &&
+            odometer.getY() < it->center.y + it->tolerance_y &&
+            odometer.getY() > it->center.y - it->tolerance_y)
+        {
+            return &(*it);
+        }
+    }
+
+    return NULL;
+}
 
 
 
-// graphNodesName Graph::getCurrentNode()
-// {
-//     for (int i = A; i < endGraphNodesNameEnum; i++)
-//     {
-//         if (fabs(pioneerPosition.x - graphNodes[i].x) < graphNodes[i].xTolerance && 
-//             fabs(pioneerPosition.y - graphNodes[i].y) < graphNodes[i].yTolerance)
-//         {
-//             return (graphNodesName) i;
-//         }
-//     }
+std::vector<Position> Graph::Dijkstra(char dest_node_ID)
+{
+    bool all_nodes_visited = false;
 
-//     ROS_ERROR("Localizacao do Pioneer fora do grafo");
-//     exit(EXIT_FAILURE);
-// }
+    Node* initial_node = getNode('H');
+    // Node* initial_node = getCurrentNode();
+    if (initial_node == NULL)
+    {
+        ROS_ERROR("O Pionneer esta fora do grafo");
+        exit(EXIT_FAILURE);
+    }
 
+    std::vector<double> distance(nodes.size(), std::numeric_limits<double>::infinity());
+    std::vector<int> previous(nodes.size(), -1);
+    std::vector<bool> visited(nodes.size(), false);
 
-// void Graph::findPathDijkstra(std::deque<Position>& goals)
-// {
-//     bool visited[endGraphNodesNameEnum];
-//     double dist[endGraphNodesNameEnum];
-//     graphNodesName parent[endGraphNodesNameEnum];
+    distance[ getNodeIndex(initial_node->ID) ] = 0;
 
-//     graphNodesName startNode = getCurrentNode();
+    while (!all_nodes_visited)
+    {
+        int node_index;
+        double node_distance = std::numeric_limits<double>::infinity();
 
-//     for (int i = 0; i <  endGraphNodesNameEnum; ++i)
-//     {
-//         parent[i] = endGraphNodesNameEnum;
-//         visited[i] = false;
-//         dist[i] = std::numeric_limits<double>::max();
-//     }
+        // Find the node with least distance
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            if (!visited[i] && distance[i] < node_distance)
+            {
+                node_index = i;
+                node_distance = distance[i];
+            }
+        }
 
-//     dist[startNode]=0;
+        visited[node_index] = true;
 
-//     for(int i = 0; i < endGraphNodesNameEnum; i++)
-//     {
-//         int node = -1;
+        // Check if the path to final destination was found
+        if (nodes[node_index].ID == dest_node_ID)
+        {
+            std::vector<Position> path;
 
-//         for (int j = 0; j < endGraphNodesNameEnum; ++j) 
-//         {
-//             if(!visited[j] && (node == -1 || dist[j] < dist[node]))
-//             {
-//                 node=j;
-//             }
-//         }
-    
-//         visited[node] = true;
+            while (previous[node_index] != -1)
+            {
+                path.insert(path.begin(), nodes[node_index].center);
+                node_index = previous[node_index];
+            }
 
-//         if(dist[node] == std::numeric_limits<double>::max())
-//         {   
-//             break;
-//         }
-    
-//         for (int j = 0; j < endGraphNodesNameEnum; ++j)
-//         {
-//             if(graphAdj[node][j] && dist[j] > dist[node] + graphAdj[node][j])
-//             {   
-//                 dist[j] = dist[node] + graphAdj[node][j];
-//                 parent[j] = (graphNodesName) node;
-//             }
-//         }
-//     }
+            return path;
+        }
 
 
-//     graphNodesName temp = P;
-//     do
-//     {
-//         ROS_INFO("%d", temp);
-//         temp = parent[temp];
-//         break;
-//     }while(temp != endGraphNodesNameEnum);
-// }
+        if (node_distance == std::numeric_limits<double>::infinity())
+        {
+            all_nodes_visited = true;
+        }
+        else
+        {
+            for (int i = 0; i < nodes[node_index].edges.size(); i++)
+            {
+                int neighbor_index = getNodeIndex(nodes[node_index].edges[i].dest_node->ID);
+
+                if (distance[node_index] + nodes[node_index].edges[i].cost < distance[neighbor_index])
+                {
+                    distance[neighbor_index] = distance[node_index] + nodes[node_index].edges[i].cost;
+                    previous[neighbor_index] = node_index;
+                }
+            }
+        }
+    }
+
+    ROS_ERROR("a");
+    exit(EXIT_FAILURE);
+}
+
