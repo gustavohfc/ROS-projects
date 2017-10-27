@@ -70,6 +70,8 @@ void fillGridMap(Graph& graph, MotionController& motion_controller, PioneerState
 
     ros::Rate loop_rate(LOOP_RATE);
 
+    graph.updateAllMapsOnRviz();
+
     while (ros::ok())
     {
         loop_rate.sleep();
@@ -129,9 +131,12 @@ int main(int argc, char **argv)
     while (!laser_sensor.msg || !odometer.msg)
         ros::spinOnce();
 
+    ros::Duration(2).sleep();
     // goToInitialPosition(graph, motion_controller, current_state);
 
     fillGridMap(graph, motion_controller, current_state);
+
+    ros::Duration(1).sleep();
 
     return 0;
 }

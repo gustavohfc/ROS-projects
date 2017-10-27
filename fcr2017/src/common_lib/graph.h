@@ -51,6 +51,7 @@ public:
     Node* getCurrentNode();
     std::vector<Position> Dijkstra(char dest_node_ID);
     void saveImageFiles();
+    void updateAllMapsOnRviz();
 };
 
 #endif

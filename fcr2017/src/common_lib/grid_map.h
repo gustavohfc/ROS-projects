@@ -37,7 +37,6 @@ private:
     const int size_x, size_y;
 
     ros::Publisher pub_rviz;
-    ros::Publisher pub_saver;
 
     std::string image_file_path;
     int8_t **grid;

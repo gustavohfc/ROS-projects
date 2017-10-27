@@ -10,7 +10,7 @@ GridMap::GridMap(char _ID, double _center_x, double _center_y, double _tolerance
     size_x(2 * _tolerance_x / GRID_MAP_RESOLUTION), size_y(2 * _tolerance_y / GRID_MAP_RESOLUTION)
 {
     // Topic to send the map to display in RViz
-    pub_rviz = nodeHandle.advertise<nav_msgs::OccupancyGrid>("map_rviz", 1);
+    pub_rviz = nodeHandle.advertise<nav_msgs::OccupancyGrid>(std::string("map_node_") + ID, 50);
 
     // Name of the file to save the grid map image
     image_file_path = std::string(fcr2017_path) + "/map_output/cic_node_" + ID + ".pgm";

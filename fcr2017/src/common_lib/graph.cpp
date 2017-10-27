@@ -249,3 +249,13 @@ void Graph::saveImageFiles()
         it->map->saveImageFile();
     }
 }
+
+
+
+void Graph::updateAllMapsOnRviz()
+{
+    for(std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
+        it->map->sendToRviz();
+    }
+}
