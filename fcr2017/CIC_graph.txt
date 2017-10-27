@@ -1,22 +1,22 @@
 ###         NAME(ID)    CENTER_POINT_X  CENTER_POINT_Y  X_TOLERANCE Y_TOLERANCE
-NODE_INFO       A           -27.38          17.67           1.31        1.31
-NODE_INFO       B           -27.20          8.67            1.31        7.15
-NODE_INFO       C           -27.18          -.19            1.31        1.31
-NODE_INFO       D           -14.09          17.58           11          1.31
-NODE_INFO       E           -14.01          -.17            11          1.31
-NODE_INFO       F           -0.96           17.60           1.31        1.31
-NODE_INFO       G           -0.78           8.75            1.31        7.15
-NODE_INFO       H           -0.50           -.22            1.31        1.31
-NODE_INFO       I           7.74            17.76           6.66        1.31
-NODE_INFO       J           8.05            -.22            6.66        1.31
-NODE_INFO       K           19.07           17.83           3.48        1.31
-NODE_INFO       L           19.12           8.69            3.48        7.15
-NODE_INFO       M           18.98           -.27            3.48        1.31
-NODE_INFO       N           30.62           17.74           6.66        1.31
-NODE_INFO       O           30.20           -.23            6.66        1.31
-NODE_INFO       P           38.71           17.72           1.31        1.31
-NODE_INFO       Q           38.87           8.86            1.31        7.15
-NODE_INFO       R           38.61           -.23            1.31        1.31
+NODE_INFO       A           -27.5            18             2.5         2
+NODE_INFO       B           -27.5            9              2.5         7
+NODE_INFO       C           -27.5            0              2.5         2
+NODE_INFO       D           -14              18             11          2
+NODE_INFO       E           -14              0              11          2
+NODE_INFO       F           -1               18             2           2
+NODE_INFO       G           -1               9              2           7
+NODE_INFO       H           -1               0              2           2
+NODE_INFO       I            8               18             7           2
+NODE_INFO       J            8               0              7           2
+NODE_INFO       K            19              18             4           2
+NODE_INFO       L            19              9              4           7
+NODE_INFO       M            19              0              4           2
+NODE_INFO       N            30              18             7           2
+NODE_INFO       O            30              0              7           2
+NODE_INFO       P            38.5            18             1.5         2
+NODE_INFO       Q            38.5            9              1.5         7
+NODE_INFO       R            38.5            0              1.5         2
 
 
 ###         NODE_NAME   NODE_NAME   COST

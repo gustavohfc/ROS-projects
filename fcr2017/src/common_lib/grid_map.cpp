@@ -51,14 +51,19 @@ void GridMap::saveImageFile()
     // Write header
     image << "P2\n";
     image << size_x << ' ' << size_y << '\n';
-    image << EMPTY_CELL << '\n';
+    image << 2 << '\n';
 
     // Write image
     for (int y = 0; y < size_y; y++)
     {
         for (int x = 0; x < size_x; x++)
         {
-            image << (int) grid[y][x] << ' ';
+            if (grid[y][x] == EMPTY_CELL)
+                image << 2 << ' ';
+            else if (grid[y][x] == UNDEFINED_CELL)
+                image << 1 << ' ';
+            else
+                image << 0 << ' ';
         }
         image << '\n';
     }
@@ -71,8 +76,8 @@ void GridMap::saveImageFile()
 void GridMap::updateGrid()
 {
     // Mark the pioneer position as empty cells
-    for  (double x = odometer.getX() - 0.5; x < odometer.getX() + 0.5; x += GRID_MAP_DISTANCE_STEP)
-        for  (double y = odometer.getY() - 0.5; y < odometer.getY() + 0.5; y += GRID_MAP_DISTANCE_STEP)
+    for  (double x = odometer.getX() - 0.25; x < odometer.getX() + 0.25; x += GRID_MAP_DISTANCE_STEP)
+        for  (double y = odometer.getY() - 0.25; y < odometer.getY() + 0.25; y += GRID_MAP_DISTANCE_STEP)
             markCoordinateAs(x, y, EMPTY_CELL);
 }
 
@@ -84,7 +89,7 @@ bool GridMap::markCoordinateAs(double coordinate_x, double coordinate_y, int8_t 
     int index_x = (coordinate_x - grid_x) / GRID_MAP_RESOLUTION;
     int index_y = (coordinate_y - grid_y) / GRID_MAP_RESOLUTION;
 
-    if (index_x < 0 || index_x > size_x || index_y < 0 || index_y > size_y)
+    if (index_x < 0 || index_x >= size_x || index_y < 0 || index_y >= size_y)
         return false;
 
     if (grid[index_y][index_x] != OCCUPIED_CELL)
@@ -110,7 +115,7 @@ void GridMap::sendToRviz()
     // Copy grid map
     map.data.resize(map.info.width * map.info.height);
     for (int y = 0; y < size_y; y++)
-        std::memcpy( &(*map.data.begin()), grid[y], size_x);
+        std::memcpy( &(map.data[y * size_x]), grid[y], size_x * sizeof(**grid));
 
     pub_rviz.publish(map);
 }

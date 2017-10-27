@@ -75,7 +75,7 @@ void fillGridMap(Graph& graph, MotionController& motion_controller, PioneerState
 
         ros::spinOnce();
 
-        // motion_controller.goToGoal();
+        motion_controller.goToGoal();
 
         if (graph.getCurrentNode() != NULL)
         {
@@ -102,9 +102,9 @@ int main(int argc, char **argv)
     ros::NodeHandle nodeHandle;
 
     // Set verbosity level to debug
-    if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug)) {
-        ros::console::notifyLoggerLevelsChanged();
-    }
+    // if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug)) {
+    //     ros::console::notifyLoggerLevelsChanged();
+    // }
 
 
     // Wait for all messages from other nodes be displayed in the terminal
