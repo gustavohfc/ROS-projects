@@ -15,9 +15,9 @@
 #define YAW_GOAL_TOLERANCE 0.1 // radianos
 #define VELOCITY_TOLERANCE 0.0001 // m/s
 
-#define MAX_LINEAR_VELOCITY 0.8 // m/s
+#define MAX_LINEAR_VELOCITY 0.4 // m/s
 #define MIN_LINEAR_VELOCITY 0.2 // m/s
-#define MAX_ANGULAR_VELOCITY 0.7 // m/s
+#define MAX_ANGULAR_VELOCITY 0.4 // m/s
 #define MIN_ANGULAR_VELOCITY 0.2 // m/s
 
 #define FRONT_LASER_ANGLE 30

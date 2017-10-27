@@ -140,7 +140,7 @@ double MotionController::calculateAngularVelocity(double angle)
     double angularVelocity = MAX_ANGULAR_VELOCITY;
     int direcao = (angle > 0) ? 1 : -1;
 
-    if (fabs(angle) < M_PI_2)
+    if (fabs(angle) < M_PI_4)
         angularVelocity -= MAX_ANGULAR_VELOCITY * (1 - fabs(angle) / M_PI_2);
 
     // Limit the angular velocity

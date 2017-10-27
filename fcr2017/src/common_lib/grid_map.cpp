@@ -42,6 +42,8 @@ GridMap::~GridMap()
 
 void GridMap::saveImageFile()
 {
+    ROS_INFO("Salvando a grade de ocupacao do no %c no arquivo %s", ID, image_file_path.c_str());
+
     std::ofstream image;
     image.open(image_file_path.c_str(), std::ofstream::out | std::ofstream::trunc);
 
@@ -79,6 +81,32 @@ void GridMap::updateGrid()
     for  (double x = odometer.getX() - 0.25; x < odometer.getX() + 0.25; x += GRID_MAP_DISTANCE_STEP)
         for  (double y = odometer.getY() - 0.25; y < odometer.getY() + 0.25; y += GRID_MAP_DISTANCE_STEP)
             markCoordinateAs(x, y, EMPTY_CELL);
+
+
+    // Check the laser sensor readings and mark the cells
+    for (double angle = laser_sensor.getAngleMin(), max = laser_sensor.getAngleMax(); angle < max; angle += GRID_MAP_LASER_ANGLE_STEP)
+    {
+        double objectDistance = laser_sensor.atAngle(angle);
+        double absolute_theta = angle + odometer.getYaw();
+
+        // Mark the empty cells
+        for (double distance = GRID_MAP_DISTANCE_STEP; distance < objectDistance; distance += GRID_MAP_DISTANCE_STEP)
+        {
+            // Calculate the object's absolute position
+            double absolute_x = odometer.getLaserSensorX() + cos(absolute_theta) * distance;
+            double absolute_y = odometer.getLaserSensorY() + sin(absolute_theta) * distance;
+
+            bool is_inside_grid = markCoordinateAs(absolute_x, absolute_y, EMPTY_CELL);
+
+            if (!is_inside_grid)
+                break;
+        }
+
+        // Mark the occupied cell
+        double absolute_x = odometer.getLaserSensorX() + cos(absolute_theta) * objectDistance;
+        double absolute_y = odometer.getLaserSensorY() + sin(absolute_theta) * objectDistance;
+        markCoordinateAs(absolute_x, absolute_y, OCCUPIED_CELL);
+    }
 }
 
 
