@@ -25,7 +25,15 @@ void goToInitialPosition(Graph& graph, MotionController& motion_controller, Pion
     }
 
     motion_controller.addGoals(graph.Dijkstra(initial_node_ID));
-    current_state.state = GoingToXY;
+
+    if (motion_controller.hasGoals())
+        current_state.state = GoingToXY;
+    else
+    {
+        ROS_INFO("Ja esta no no inicial");
+        current_state.state == WaitingGoal;
+        return;
+    }
 
     ROS_INFO("Indo para o no inicial [ Atual(%c) -> %s ]", graph.getCurrentNode()->ID, motion_controller.getGoalsString().c_str());
 
@@ -42,9 +50,48 @@ void goToInitialPosition(Graph& graph, MotionController& motion_controller, Pion
         if (current_state.state == GoalReached)
         {
             ROS_INFO("Chegou na posicao inicial.");
+            current_state.state == WaitingGoal;
             break;
         }
     }
+}
+
+
+
+void fillGridMap(Graph& graph, MotionController& motion_controller, PioneerState& current_state)
+{
+
+    motion_controller.addGoals(graph.Dijkstra('J'));
+
+    current_state.state = GoingToXY;
+
+    ROS_INFO("Indo para o no inicial [ Atual(%c) -> %s ]", graph.getCurrentNode()->ID, motion_controller.getGoalsString().c_str());
+
+    ros::Rate loop_rate(LOOP_RATE);
+
+    while (ros::ok())
+    {
+        loop_rate.sleep();
+
+        ros::spinOnce();
+
+        // motion_controller.goToGoal();
+
+        if (graph.getCurrentNode() != NULL)
+        {
+            graph.getCurrentNode()->map->updateGrid();
+            graph.getCurrentNode()->map->sendToRviz();
+        }
+
+        if (current_state.state == GoalReached)
+        {
+            ROS_INFO("Chegou na posicao inicial.");
+            current_state.state == WaitingGoal;
+            break;
+        }
+    }
+
+    graph.saveImageFiles();
 }
 
 
@@ -66,7 +113,7 @@ int main(int argc, char **argv)
 
     if (argc != 2)
     {
-        ROS_ERROR("Numero de parametros invalido, deve ser passado apenas um parametro correspondente ao caminho para o arquivo de informacoes do grafo");
+        ROS_ERROR("Numero de parametros invalido, deve ser passado apenas um parametro correspondente ao caminho a pasta fcr2017");
         exit(EXIT_FAILURE);
     }
 
@@ -75,41 +122,15 @@ int main(int argc, char **argv)
     Odometer odometer(nodeHandle);
     LaserSensor laser_sensor(nodeHandle);
     MotionController motion_controller(nodeHandle, current_state, odometer, laser_sensor);
-    Graph graph(argv[1], odometer);
+    Graph graph(argv[1], nodeHandle, odometer, laser_sensor);
 
     // Wait until receive at least one message from each sensor
     while (!laser_sensor.msg || !odometer.msg)
         ros::spinOnce();
 
-    goToInitialPosition(graph, motion_controller, current_state);
+    // goToInitialPosition(graph, motion_controller, current_state);
 
-    // temp
-    // motion_controller.addGoal(Position(10, 0));
-
-    // ros::Rate loop_rate(60);
-
-    // while (ros::ok())
-    // {
-    //     loop_rate.sleep();
-
-    //     ros::spinOnce();
-
-    //     // Wait until receive at least one message from the laser sensor
-    //     if (!laser_sensor.msg)
-    //         continue;
-
-    //     motion_controller.goToGoal();
-
-    //     if (!motion_controller.hasGoals())
-    //         break;
-
-    //     ROS_DEBUG("\n\n\n\n");
-    // }
-
-    // loop_rate.sleep();
-
-    // Wait to make sure all messages were send
-    ros::Duration(1).sleep();
+    fillGridMap(graph, motion_controller, current_state);
 
     return 0;
 }

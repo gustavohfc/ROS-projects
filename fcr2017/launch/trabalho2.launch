@@ -26,16 +26,15 @@
     </node>
 
 
-    <!-- Carrega o no responsavel por salvar a imagem do mapa no arquivo fcr2017/mapas/cic.pgm -->
-    <!-- <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(find fcr2017)/map_output/cic" output="screen" /> -->
+    <!-- Carrega o nos responsaveis por salvar as imagens dos mapas -->
     <!-- <include file="$(find fcr2017)/launch/map_saver.launch" /> -->
 
     <!-- Sincroniza o mapa com o odometro no Rviz -->
     <node pkg="tf" type="static_transform_publisher" name="map_odom" args="0 0 0 0 0 0 /map /odom 100" />
 
     <!-- Abre o Rviz -->
-    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/roteiro5.rviz"/> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/roteiro5.rviz"/>
 
     
-    <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" args="$(find fcr2017)/CIC_graph.txt" output="screen" />
+    <!-- <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" args="$(find fcr2017)" output="screen" /> -->
 </launch>

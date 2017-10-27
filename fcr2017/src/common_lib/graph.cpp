@@ -3,19 +3,24 @@
 #include <string>
 #include <stdlib.h>
 
+#include <string.h>
+
 #include "graph.h"
 
 
-Graph::Graph(const char *file_name, const Odometer& _odometer)
+Graph::Graph(const char *fcr2017_path, ros::NodeHandle& _nodeHandle, const Odometer& _odometer, const LaserSensor& _laser_sensor)
     : odometer(_odometer)
 {
-    std::ifstream graph_file(file_name);
+    std::string file_name(fcr2017_path);
+    file_name += "/CIC_graph.txt";
+
+    std::ifstream graph_file(file_name.c_str());
     std::string line;
     int line_count = 1;
 
     if (!graph_file.is_open())
     {
-        ROS_ERROR("Nao foi possivel abrir o arquivo %s", file_name);
+        ROS_ERROR("Nao foi possivel abrir o arquivo %s", file_name.c_str());
         exit(EXIT_FAILURE);
     }
 
@@ -42,7 +47,7 @@ Graph::Graph(const char *file_name, const Odometer& _odometer)
             if (line_stream.fail())
                 bad_line_parse = true;
             else
-                addNode(ID, center_x, center_y, tolerance_x, tolerance_y);
+                addNode(ID, center_x, center_y, tolerance_x, tolerance_y, _nodeHandle, _odometer, _laser_sensor, fcr2017_path);
         }
         else if (line_type.compare("EDGE_INFO") == 0)
         {
@@ -63,7 +68,7 @@ Graph::Graph(const char *file_name, const Odometer& _odometer)
 
         if (bad_line_parse)
         {
-            ROS_ERROR("Erro no parser da linha %d do arquivo %s (%s)", line_count, file_name, line.c_str());
+            ROS_ERROR("Erro no parser da linha %d do arquivo %s (%s)", line_count, file_name.c_str(), line.c_str());
             exit(EXIT_FAILURE);
         }
 
@@ -75,7 +80,17 @@ Graph::Graph(const char *file_name, const Odometer& _odometer)
 
 
 
-void Graph::addNode(char ID, double center_x, double center_y, double tolerance_x, double tolerance_y)
+Graph::~Graph()
+{
+    for(std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
+        delete it->map;
+    }
+}
+
+
+
+void Graph::addNode(char ID, double center_x, double center_y, double tolerance_x, double tolerance_y, ros::NodeHandle& nodeHandle, const Odometer& odometer, const LaserSensor& laser_sensor, const char *fcr2017_path)
 {
     // Check if the graph already has a node with the same ID
     if (getNode(ID, false) != NULL)
@@ -84,7 +99,7 @@ void Graph::addNode(char ID, double center_x, double center_y, double tolerance_
         exit(EXIT_FAILURE);
     }
 
-    nodes.push_back(Node(ID, center_x, center_y, tolerance_x, tolerance_y));
+    nodes.push_back(Node(ID, center_x, center_y, tolerance_x, tolerance_y, nodeHandle, odometer, laser_sensor, fcr2017_path));
 }
 
 
@@ -225,3 +240,12 @@ std::vector<Position> Graph::Dijkstra(char dest_node_ID)
     exit(EXIT_FAILURE);
 }
 
+
+
+void Graph::saveImageFiles()
+{
+    for(std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
+        it->map->saveImageFile();
+    }
+}

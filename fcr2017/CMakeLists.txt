@@ -91,5 +91,6 @@ add_executable(140021671_Trabalho2
          src/common_lib/laser_sensor.cpp
          src/common_lib/motion_controller.cpp
          src/common_lib/graph.cpp
+         src/common_lib/grid_map.cpp
          src/common_lib/common.cpp)
 target_link_libraries(140021671_Trabalho2 ${catkin_LIBRARIES})
