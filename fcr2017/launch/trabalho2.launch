@@ -25,10 +25,6 @@
         <!-- <remap from="/joint_states" to="/p3at/joint_states" /> -->
     </node>
 
-
-    <!-- Carrega o nos responsaveis por salvar as imagens dos mapas -->
-    <!-- <include file="$(find fcr2017)/launch/map_saver.launch" /> -->
-
     <!-- Sincroniza o mapa com o odometro no Rviz -->
     <node pkg="tf" type="static_transform_publisher" name="map_odom" args="0 0 0 0 0 0 /map /odom 100" />
 

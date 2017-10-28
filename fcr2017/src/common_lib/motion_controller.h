@@ -8,6 +8,7 @@
 
 #include "common.h"
 #include "odometer.h"
+#include "graph.h"
 #include "laser_sensor.h"
 
 
@@ -37,6 +38,7 @@ private:
     PioneerState& current_state;
     const Odometer& odometer;
     const LaserSensor& laser_sensor;
+    const Graph& graph;
 
     void updateState();
     double calculateLinearVelocity(double distance);
@@ -46,7 +48,7 @@ private:
 
 
 public:
-    MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor);
+    MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor, const Graph& _graph);
 
     void addGoal(Position new_goal);
     void addGoals(std::vector<Position> new_goals);

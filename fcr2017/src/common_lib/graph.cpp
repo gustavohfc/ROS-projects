@@ -61,6 +61,10 @@ Graph::Graph(const char *fcr2017_path, ros::NodeHandle& _nodeHandle, const Odome
             else
                 addBidirectionalEdge(ID_node_1, ID_node_2, cost);
         }
+        else if (line_type.compare("PATH_CLOSE_LOOP") == 0)
+        {
+            std::getline(line_stream, path_close_loop);
+        }
         else if (line_type.compare("###") == 0)
         {} // It's a commented line, so do nothing
         else
@@ -149,9 +153,9 @@ int Graph::getNodeIndex(char ID)
 
 
 
-Node* Graph::getCurrentNode()
+const Node* Graph::getCurrentNode() const
 {
-    for(std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    for(std::vector<Node>::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
     {
         if (odometer.getX() < it->center.x + it->tolerance_x &&
             odometer.getX() > it->center.x - it->tolerance_x &&
@@ -171,8 +175,7 @@ std::vector<Position> Graph::Dijkstra(char dest_node_ID)
 {
     bool all_nodes_visited = false;
 
-    Node* initial_node = getNode('H');
-    // Node* initial_node = getCurrentNode();
+    const Node* initial_node = getCurrentNode();
     if (initial_node == NULL)
     {
         ROS_ERROR("O Pionneer esta fora do grafo");
@@ -238,6 +241,29 @@ std::vector<Position> Graph::Dijkstra(char dest_node_ID)
 
     ROS_ERROR("Path not found");
     exit(EXIT_FAILURE);
+}
+
+
+
+std::vector<Position> Graph::closeLoopPathToGoals()
+{
+    std::vector<Position> new_goals;
+
+    for (int i = 0; i < path_close_loop.size(); i++)
+    {
+        if (path_close_loop[i] >= 'A' && path_close_loop[i] <= 'R')
+        {
+            new_goals.push_back(getNode(path_close_loop[i])->center);
+        }
+    }
+
+    while (getCurrentNode()->ID != new_goals.end()->node_ID)
+    {
+        new_goals.push_back(new_goals[0]);
+        new_goals.erase(new_goals.begin());
+    }
+
+    return new_goals;
 }
 
 

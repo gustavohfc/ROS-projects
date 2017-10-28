@@ -40,3 +40,7 @@ EDGE_INFO   H           G           19
 EDGE_INFO   H           E           28
 EDGE_INFO   E           C           27
 EDGE_INFO   C           B           19
+
+
+### Caminho fechado do grafo que passa por todos os nos
+PATH_CLOSE_LOOP      A -> B -> C -> E -> H -> G -> H -> J -> M -> L -> M -> O -> R -> Q -> P -> N -> K -> L -> K -> I -> F -> G -> F -> D

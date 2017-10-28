@@ -8,8 +8,8 @@ inline bool is_yaw_reached(double yaw)          { return ((yaw < 0) ? -yaw : yaw
 
 
 
-MotionController::MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor)
-    : odometer(_odometer), current_state(_current_state), laser_sensor(_laser_sensor)
+MotionController::MotionController(ros::NodeHandle& nodeHandle, PioneerState& _current_state, const Odometer& _odometer, const LaserSensor& _laser_sensor, const Graph& _graph)
+    : odometer(_odometer), current_state(_current_state), laser_sensor(_laser_sensor), graph(_graph)
 {
     // Initialize topic publisher
     pub_vel = nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1);
@@ -76,15 +76,15 @@ void MotionController::goToGoal()
             velocity.angular.z = 0;
 
             if (goals[0].hasNode_ID)
-                ROS_INFO("Chegou na posiao (%f, %f, %f) - No %c", odometer.getX(), odometer.getY(), odometer.getYaw(), goals[0].node_ID);
+                ROS_INFO("Chegou na posiao: [No %c] (%f, %f, %f)", graph.getCurrentNode()->ID, odometer.getX(), odometer.getY(), odometer.getYaw());
             else
-                ROS_INFO("Chegou na posiao (%f, %f, %f)", odometer.getX(), odometer.getY(), odometer.getYaw());
+                ROS_INFO("Chegou na posiao: (%f, %f, %f)", odometer.getX(), odometer.getY(), odometer.getYaw());
 
             goals.erase(goals.begin());
 
             if(hasGoals())
             {
-                ROS_INFO("Proximos objetivos: [ %s ]", getGoalsString().c_str());
+                ROS_INFO("Proximos objetivos: [ Atual(%c) -> %s ]", graph.getCurrentNode()->ID, getGoalsString().c_str());
                 current_state.state = GoingToXY;
             }
             else

@@ -37,6 +37,7 @@ class Graph
 private:
     std::vector<Node> nodes;
     const Odometer& odometer;
+    std::string path_close_loop;
 
     void addNode(char ID, double center_x, double center_y, double tolerance_x, double tolerance_y, ros::NodeHandle& nodeHandle, const Odometer& odometer, const LaserSensor& laser_sensor, const char *fcr2017_path);
     void addBidirectionalEdge(char ID_node_1, char ID_node_2, double cost);
@@ -48,8 +49,9 @@ public:
     Graph(const char *file_name, ros::NodeHandle& nodeHandle, const Odometer& _odometer, const LaserSensor& _laser_sensor);
     ~Graph();
     Node* getNode(char ID, bool must_exist = true);
-    Node* getCurrentNode();
+    const Node* getCurrentNode() const;
     std::vector<Position> Dijkstra(char dest_node_ID);
+    std::vector<Position> closeLoopPathToGoals();
     void saveImageFiles();
     void updateAllMapsOnRviz();
 };

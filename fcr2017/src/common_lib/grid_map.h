@@ -24,7 +24,7 @@
 
 #define GRID_MAP_LASER_ANGLE_STEP 0.0174533 // ~1 grau
 #define GRID_MAP_DISTANCE_STEP (GRID_MAP_RESOLUTION / 2)
-#define GRID_MAP_LASER_MAX_DISTANCE 5
+#define GRID_MAP_LASER_MAX_DISTANCE 3.5
 
 
 class GridMap
@@ -50,21 +50,6 @@ public:
     void updateGrid();
     bool markCoordinateAs(double coordinate_x, double coordinate_y, int8_t value);
     void sendToRviz();
-
-
-// private:
-//     int8_t grid[GRID_MAP_MATRIX_SIZE_Y][GRID_MAP_MATRIX_SIZE_X];
-//     ros::Publisher pub_rviz, pub_saver;
-
-//     void sendMapTo(ros::Publisher& pub);
-//     void setCell(double angle, double distance, int8_t newValue);
-
-// public:
-// GridMap();
-
-//     void init(ros::NodeHandle& nodeHandle);
-//     void update();
-//     void save();
 };
 
 
