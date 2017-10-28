@@ -60,7 +60,6 @@ void goToInitialPosition(Graph& graph, MotionController& motion_controller, Pion
 
 void fillGridMap(Graph& graph, MotionController& motion_controller, PioneerState& current_state)
 {
-
     motion_controller.addGoals(graph.closeLoopPathToGoals());
 
     current_state.state = GoingToXY;

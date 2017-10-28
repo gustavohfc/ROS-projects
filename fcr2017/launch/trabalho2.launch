@@ -32,5 +32,6 @@
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fcr2017)/launch/trabalho2.rviz"/>
 
     
-    <!-- <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" args="$(find fcr2017)" output="screen" /> -->
+    <node name="Trabalho2" pkg="fcr2017" type="140021671_Trabalho2" args="$(find fcr2017)" output="screen" />
+
 </launch>

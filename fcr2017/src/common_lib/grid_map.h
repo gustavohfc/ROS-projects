@@ -8,15 +8,7 @@
 #include "common.h"
 
 
-#define GRID_MAP_RESOLUTION 0.1
-
-#define GRID_MAP_LIMIT_POSITIVE_X 46
-#define GRID_MAP_LIMIT_NEGATIVE_X -37
-#define GRID_MAP_LIMIT_POSITIVE_Y 26
-#define GRID_MAP_LIMIT_NEGATIVE_Y -9
-
-#define GRID_MAP_MATRIX_OFFSET_X ( (int) ((-1 * GRID_MAP_LIMIT_NEGATIVE_X) / GRID_MAP_RESOLUTION) )
-#define GRID_MAP_MATRIX_OFFSET_Y ( (int) ((-1 * GRID_MAP_LIMIT_NEGATIVE_Y) / GRID_MAP_RESOLUTION) )
+#define GRID_MAP_RESOLUTION 0.01
 
 #define EMPTY_CELL 0
 #define UNDEFINED_CELL 50
@@ -40,8 +32,6 @@ private:
 
     std::string image_file_path;
     int8_t **grid;
-    // int8_t grid[GRID_MAP_MATRIX_SIZE_Y][GRID_MAP_MATRIX_SIZE_X];
-
 
 public:
     GridMap(char _ID, double _center_x, double _center_y, double _tolerance_x, double _tolerance_y, ros::NodeHandle& nodeHandle, const Odometer& _odometer, const LaserSensor& _laser_sensor, const char *fcr2017_path);
