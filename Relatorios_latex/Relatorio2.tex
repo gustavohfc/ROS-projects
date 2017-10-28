@@ -1,0 +1,116 @@
+\documentclass{llncs}
+
+\usepackage{forest}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+\def\Size{4pt}
+\tikzset{
+      folder/.pic={
+        \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+          (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+        \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+          (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+      }
+    }
+
+
+
+
+
+\begin{document}
+
+\title{Relatório do Trabalho 2}
+\author{Gustavo Henrique Fernandes Carvalho - 14/0021671}
+\institute{Fundamentos Computacionais de Robótica - 2017/2 - Universidade de Brasília}
+\maketitle
+
+
+\section{Informações do pacote}
+\subsection{Dependências}
+Para executar a simulação do trabalho 2 não é necessário nenhuma dependência além das dependências originais do pacote fcr2017, definidas no arquivo \textit{package.xml}.
+
+
+\subsection{Rodando a simulação}
+Para rodar a simulação é necessário apenas executar o seguinte comando no terminal:
+\begin{lstlisting}[language=bash]
+	$ roslaunch fcr2017 trabalho2.launch
+\end{lstlisting}
+O arquivo \textit{trabalho2.launch} já inicia todos os nós necessários para a simulação, inclusive o nó de controle do trabalho 2.
+
+A simulação é dividida em 3 etapas, na primeira etapa o Pioneer se move para uma posição inicial no mapa topológico definida pelo usuário, na segunda etapa o Pioneer percorre todo o mapa topológico preenchendo a grade de ocupação de cada região do mapa, e na última etapa o Pioneer vai para a posição final também  definida pelo usuário, as interfaces de entrada e saída da simulação são explicadas com mais detalhes na seção \ref{sec:io}.
+
+
+\subsection{Arquivos}
+A Figura \ref{file_tree} mostra os novos arquivos do pacote fcr2017 utilizados para a realização do trabalho 2, os arquivos originais do pacote não são mostrados.
+
+\pagebreak
+\begin{figure}[h!]
+\begin{forest}
+      for tree={
+        font=\ttfamily,
+        grow'=0,
+        child anchor=west,
+        parent anchor=south,
+        anchor=west,
+        calign=first,
+        inner xsep=7pt,
+        edge path={
+          \noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+        },
+        % style for your file node 
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+          inner xsep=2pt,font=\scriptsize\ttfamily
+                     },
+        before typesetting nodes={
+          if n=1
+            {insert before={[,phantom]}}
+            {}
+        },
+        fit=band,
+        before computing xy={l=15pt},
+      }  
+	[fcr2017
+		[launch
+			[trabalho2.launch - Utilizado para iniciar a simulação, file]
+			[trabalho2.rviz - Configuração do RViz, file]
+			[..., file]
+		]
+		[map\_output - Diretório onde as imagens das grades de ocupação são salvas.
+		]
+		[src
+			[140021671\_Trabalho2.cpp - Código fonte do trabalho 2, file]
+			[common\_lib - Biblioteca implementada para facilitar o reuso e modificação do código
+				[common.cpp - Implementação de funções gerais, file]
+				[common.h - Definição de funções e estruturas gerais, file]
+				[graph.cpp - Implementação das funções para manipulação de grafo, file]
+				[graph.h - Definição das funções e estruturas para manipulação de grafo, file]
+				[grid\_map.cpp - Implementação das funções que fazem o mapa de ocupação, file]
+				[grid\_map.h - Definição das funções e estruturas que fazem o mapa de ocupação, file]
+				[laser\_sensor.cpp - Implementação das funções que manipulam os dados do sensor laser, file]
+				[laser\_sensor.h - Definição das funções e estruturas que manipulam os dados do sensor laser, file]
+				[motion\_controller.cpp - Implementação das funções de controle de movimento, file]
+				[motion\_controller.h - Definição das funções e estruturas de controle de movimento, file]
+				[odometer.cpp - Implementação das funções manipulam os dados do odômetro, file]
+				[odometer.h - Definição das funções e estruturas manipulam os dados do odômetro, file]
+			]
+		]
+		[CIC\_graph.txt - Definição do mapa topológico do primeiro andar do prédio CIC/EST, file]
+		[README.txt - Mais informações sobre o pacote, file]
+		[..., file]
+	]
+\end{forest}
+\caption{Estrutura dos arquivos.}
+\label{file_tree}
+\end{figure}
+
+
+\section{Interfaces da simulação} \label{sec:io}
+\subsection{Interface de entrada de dados}
+
+
+\end{document}
