@@ -2,3 +2,7 @@ CMakeLists.txt
 
 
 fcr2017/map_output
+
+*.pdf
+!llncsdoc.pdf
+
