@@ -76,9 +76,9 @@ void MotionController::goToGoal()
             velocity.angular.z = 0;
 
             if (goals[0].hasNode_ID)
-                ROS_INFO("Chegou na posiao: [No %c] (%f, %f, %f)", graph.getCurrentNode()->ID, odometer.getX(), odometer.getY(), odometer.getYaw());
+                ROS_INFO("Chegou na posicao: [No %c] (%f, %f, %f)", graph.getCurrentNode()->ID, odometer.getX(), odometer.getY(), odometer.getYaw());
             else
-                ROS_INFO("Chegou na posiao: (%f, %f, %f)", odometer.getX(), odometer.getY(), odometer.getYaw());
+                ROS_INFO("Chegou na posicao: (%f, %f, %f)", odometer.getX(), odometer.getY(), odometer.getYaw());
 
             goals.erase(goals.begin());
 
