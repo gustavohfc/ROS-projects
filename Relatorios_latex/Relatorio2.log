@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.10.28)  29 OCT 2017 00:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.10.28)  29 OCT 2017 22:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1163,36 +1163,58 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip51
 )
-(./Relatorio2.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
+Package: algpseudocode 
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count195
+\c@ALG@rem=\count196
+\c@ALG@nested=\count197
+\ALG@tlm=\skip52
+\ALG@thistlm=\skip53
+\c@ALG@Lnr=\count198
+\c@ALG@blocknr=\count199
+\c@ALG@storecount=\count266
+\c@ALG@tmpcounter=\count267
+\ALG@tmplength=\skip54
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (./Relatorio2.aux)
 \openout1 = `Relatorio2.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
  ABD: EveryShipout initializing macros
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count195
+\scratchcounter=\count268
 \scratchdimen=\dimen273
 \scratchbox=\box103
-\nofMPsegments=\count196
-\nofMParguments=\count197
+\nofMPsegments=\count269
+\nofMParguments=\count270
 \everyMPshowfont=\toks44
-\MPscratchCnt=\count198
+\MPscratchCnt=\count271
 \MPscratchDim=\dimen274
-\MPnumerator=\count199
-\makeMPintoPDFobject=\count266
+\MPnumerator=\count272
+\makeMPintoPDFobject=\count273
 \everyMPtoPDFconversion=\toks45
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
@@ -1209,9 +1231,9 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@lstlisting=\count267
+\c@lstlisting=\count274
 \AtBeginShipoutBox=\box104
-Package hyperref Info: Link coloring OFF on input line 27.
+Package hyperref Info: Link coloring OFF on input line 28.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -1219,20 +1241,20 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count268
+\c@section@level=\count275
 )
-LaTeX Info: Redefining \ref on input line 27.
-LaTeX Info: Redefining \pageref on input line 27.
-LaTeX Info: Redefining \nameref on input line 27.
+LaTeX Info: Redefining \ref on input line 28.
+LaTeX Info: Redefining \pageref on input line 28.
+LaTeX Info: Redefining \nameref on input line 28.
 
 (./Relatorio2.out) (./Relatorio2.out)
 \@outlinefile=\write4
 \openout4 = `Relatorio2.out'.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 33.
+(Font)              <7> on input line 34.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 33.
+(Font)              <5> on input line 34.
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
@@ -1245,7 +1267,7 @@ Underfull \vbox (badness 1661) has occurred while \output is active []
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (88.1239pt too wide) in paragraph at lines 113--114
+Overfull \hbox (88.1239pt too wide) in paragraph at lines 114--115
 [][] 
  []
 
@@ -1253,27 +1275,27 @@ Overfull \hbox (88.1239pt too wide) in paragraph at lines 113--114
 File: ./img_t2/no_inicial.png Graphic file (type png)
 
 <use ./img_t2/no_inicial.png>
-Package pdftex.def Info: ./img_t2/no_inicial.png used on input line 126.
+Package pdftex.def Info: ./img_t2/no_inicial.png used on input line 127.
 (pdftex.def)             Requested size: 327.47264pt x 37.64052pt.
 
 <./img_t2/no_final.png, id=48, 420.57124pt x 35.13126pt>
 File: ./img_t2/no_final.png Graphic file (type png)
 
 <use ./img_t2/no_final.png>
-Package pdftex.def Info: ./img_t2/no_final.png used on input line 132.
+Package pdftex.def Info: ./img_t2/no_final.png used on input line 133.
 (pdftex.def)             Requested size: 315.42766pt x 26.34836pt.
 
 <./img_t2/rviz.png, id=50, 1861.95625pt x 1059.96pt>
 File: ./img_t2/rviz.png Graphic file (type png)
  <use ./img_t2/rviz.png>
-Package pdftex.def Info: ./img_t2/rviz.png used on input line 148.
+Package pdftex.def Info: ./img_t2/rviz.png used on input line 149.
 (pdftex.def)             Requested size: 502.73491pt x 286.19302pt.
 
 <./img_t2/terminal.png, id=53, 985.6825pt x 178.6675pt>
 File: ./img_t2/terminal.png Graphic file (type png)
 
 <use ./img_t2/terminal.png>
-Package pdftex.def Info: ./img_t2/terminal.png used on input line 158.
+Package pdftex.def Info: ./img_t2/terminal.png used on input line 159.
 (pdftex.def)             Requested size: 492.84004pt x 89.33353pt.
  [3 <./img_t2/no_inicial.png> <./img_t2/no_final.png>] [4 <./img_t2/rviz.png> <
 ./img_t2/terminal.png>]
@@ -1281,17 +1303,17 @@ Package pdftex.def Info: ./img_t2/terminal.png used on input line 158.
 File: ./img_t2/cic_node_A.png Graphic file (type png)
 
 <use ./img_t2/cic_node_A.png>
-Package pdftex.def Info: ./img_t2/cic_node_A.png used on input line 170.
+Package pdftex.def Info: ./img_t2/cic_node_A.png used on input line 171.
 (pdftex.def)             Requested size: 125.46843pt x 100.37474pt.
 
 <./img_t2/cic_node_B.png, id=73, 501.875pt x 1405.25pt>
 File: ./img_t2/cic_node_B.png Graphic file (type png)
 
 <use ./img_t2/cic_node_B.png>
-Package pdftex.def Info: ./img_t2/cic_node_B.png used on input line 176.
+Package pdftex.def Info: ./img_t2/cic_node_B.png used on input line 177.
 (pdftex.def)             Requested size: 501.87376pt x 1405.24658pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 176--177
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 177--178
  [][] 
  []
 
@@ -1299,17 +1321,17 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 176--177
 File: ./img_t2/cic_node_C.png Graphic file (type png)
 
 <use ./img_t2/cic_node_C.png>
-Package pdftex.def Info: ./img_t2/cic_node_C.png used on input line 182.
+Package pdftex.def Info: ./img_t2/cic_node_C.png used on input line 183.
 (pdftex.def)             Requested size: 125.46843pt x 100.37474pt.
 
 <./img_t2/cic_node_D.png, id=75, 2208.25pt x 401.5pt>
 File: ./img_t2/cic_node_D.png Graphic file (type png)
 
 <use ./img_t2/cic_node_D.png>
-Package pdftex.def Info: ./img_t2/cic_node_D.png used on input line 188.
+Package pdftex.def Info: ./img_t2/cic_node_D.png used on input line 189.
 (pdftex.def)             Requested size: 441.64218pt x 80.29857pt.
 
-Overfull \hbox (101.31863pt too wide) in paragraph at lines 188--189
+Overfull \hbox (101.31863pt too wide) in paragraph at lines 189--190
  [][] 
  []
 
@@ -1317,10 +1339,10 @@ Overfull \hbox (101.31863pt too wide) in paragraph at lines 188--189
 File: ./img_t2/cic_node_E.png Graphic file (type png)
 
 <use ./img_t2/cic_node_E.png>
-Package pdftex.def Info: ./img_t2/cic_node_E.png used on input line 194.
+Package pdftex.def Info: ./img_t2/cic_node_E.png used on input line 195.
 (pdftex.def)             Requested size: 441.64218pt x 80.29857pt.
 
-Overfull \hbox (101.31863pt too wide) in paragraph at lines 194--195
+Overfull \hbox (101.31863pt too wide) in paragraph at lines 195--196
  [][] 
  []
 
@@ -1328,17 +1350,17 @@ Overfull \hbox (101.31863pt too wide) in paragraph at lines 194--195
 File: ./img_t2/cic_node_F.png Graphic file (type png)
 
 <use ./img_t2/cic_node_F.png>
-Package pdftex.def Info: ./img_t2/cic_node_F.png used on input line 200.
+Package pdftex.def Info: ./img_t2/cic_node_F.png used on input line 201.
 (pdftex.def)             Requested size: 100.37474pt x 100.37474pt.
 
 <./img_t2/cic_node_G.png, id=78, 401.5pt x 1405.25pt>
 File: ./img_t2/cic_node_G.png Graphic file (type png)
 
 <use ./img_t2/cic_node_G.png>
-Package pdftex.def Info: ./img_t2/cic_node_G.png used on input line 206.
+Package pdftex.def Info: ./img_t2/cic_node_G.png used on input line 207.
 (pdftex.def)             Requested size: 401.49901pt x 1405.24658pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 206--207
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 207--208
  [][] 
  []
 
@@ -1346,17 +1368,17 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 206--207
 File: ./img_t2/cic_node_H.png Graphic file (type png)
 
 <use ./img_t2/cic_node_H.png>
-Package pdftex.def Info: ./img_t2/cic_node_H.png used on input line 212.
+Package pdftex.def Info: ./img_t2/cic_node_H.png used on input line 213.
 (pdftex.def)             Requested size: 100.37474pt x 100.37474pt.
 
 <./img_t2/cic_node_I.png, id=80, 1405.25pt x 401.5pt>
 File: ./img_t2/cic_node_I.png Graphic file (type png)
 
 <use ./img_t2/cic_node_I.png>
-Package pdftex.def Info: ./img_t2/cic_node_I.png used on input line 218.
+Package pdftex.def Info: ./img_t2/cic_node_I.png used on input line 219.
 (pdftex.def)             Requested size: 351.31165pt x 100.37474pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 218--219
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 219--220
  [][] 
  []
 
@@ -1364,10 +1386,10 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 218--219
 File: ./img_t2/cic_node_J.png Graphic file (type png)
 
 <use ./img_t2/cic_node_J.png>
-Package pdftex.def Info: ./img_t2/cic_node_J.png used on input line 224.
+Package pdftex.def Info: ./img_t2/cic_node_J.png used on input line 225.
 (pdftex.def)             Requested size: 351.31165pt x 100.37474pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 224--225
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 225--226
  [][] 
  []
 
@@ -1375,17 +1397,17 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 224--225
 File: ./img_t2/cic_node_K.png Graphic file (type png)
 
 <use ./img_t2/cic_node_K.png>
-Package pdftex.def Info: ./img_t2/cic_node_K.png used on input line 230.
+Package pdftex.def Info: ./img_t2/cic_node_K.png used on input line 231.
 (pdftex.def)             Requested size: 200.74951pt x 100.37474pt.
 
 <./img_t2/cic_node_L.png, id=83, 803.0pt x 1405.25pt>
 File: ./img_t2/cic_node_L.png Graphic file (type png)
 
 <use ./img_t2/cic_node_L.png>
-Package pdftex.def Info: ./img_t2/cic_node_L.png used on input line 236.
+Package pdftex.def Info: ./img_t2/cic_node_L.png used on input line 237.
 (pdftex.def)             Requested size: 802.99805pt x 1405.24658pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 236--237
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 237--238
  [][] 
  []
 
@@ -1393,17 +1415,17 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 236--237
 File: ./img_t2/cic_node_M.png Graphic file (type png)
 
 <use ./img_t2/cic_node_M.png>
-Package pdftex.def Info: ./img_t2/cic_node_M.png used on input line 242.
+Package pdftex.def Info: ./img_t2/cic_node_M.png used on input line 243.
 (pdftex.def)             Requested size: 200.74951pt x 100.37474pt.
 
 <./img_t2/cic_node_N.png, id=85, 1405.25pt x 401.5pt>
 File: ./img_t2/cic_node_N.png Graphic file (type png)
 
 <use ./img_t2/cic_node_N.png>
-Package pdftex.def Info: ./img_t2/cic_node_N.png used on input line 248.
+Package pdftex.def Info: ./img_t2/cic_node_N.png used on input line 249.
 (pdftex.def)             Requested size: 351.31165pt x 100.37474pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 248--249
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 249--250
  [][] 
  []
 
@@ -1411,10 +1433,10 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 248--249
 File: ./img_t2/cic_node_O.png Graphic file (type png)
 
 <use ./img_t2/cic_node_O.png>
-Package pdftex.def Info: ./img_t2/cic_node_O.png used on input line 254.
+Package pdftex.def Info: ./img_t2/cic_node_O.png used on input line 255.
 (pdftex.def)             Requested size: 351.31165pt x 100.37474pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 254--255
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 255--256
  [][] 
  []
 
@@ -1422,17 +1444,17 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 254--255
 File: ./img_t2/cic_node_P.png Graphic file (type png)
 
 <use ./img_t2/cic_node_P.png>
-Package pdftex.def Info: ./img_t2/cic_node_P.png used on input line 260.
+Package pdftex.def Info: ./img_t2/cic_node_P.png used on input line 261.
 (pdftex.def)             Requested size: 75.28105pt x 100.37474pt.
 
 <./img_t2/cic_node_Q.png, id=88, 301.125pt x 1405.25pt>
 File: ./img_t2/cic_node_Q.png Graphic file (type png)
 
 <use ./img_t2/cic_node_Q.png>
-Package pdftex.def Info: ./img_t2/cic_node_Q.png used on input line 266.
+Package pdftex.def Info: ./img_t2/cic_node_Q.png used on input line 267.
 (pdftex.def)             Requested size: 301.12425pt x 1405.24658pt.
 
-Overfull \hbox (10.9881pt too wide) in paragraph at lines 266--267
+Overfull \hbox (10.9881pt too wide) in paragraph at lines 267--268
  [][] 
  []
 
@@ -1440,44 +1462,74 @@ Overfull \hbox (10.9881pt too wide) in paragraph at lines 266--267
 File: ./img_t2/cic_node_R.png Graphic file (type png)
 
 <use ./img_t2/cic_node_R.png>
-Package pdftex.def Info: ./img_t2/cic_node_R.png used on input line 272.
+Package pdftex.def Info: ./img_t2/cic_node_R.png used on input line 273.
 (pdftex.def)             Requested size: 75.28105pt x 100.37474pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [5 <./img_t2/cic_node_A.png> <./img_t2/cic_node_B.png>] [6 <./img_t2/cic_node_
 C.png> <./img_t2/cic_node_D.png> <./img_t2/cic_node_E.png> <./img_t2/cic_node_F
-.png>] [7 <./img_t2/cic_node_G.png> <./img_t2/cic_node_H.png> <./img_t2/cic_nod
-e_I.png> <./img_t2/cic_node_J.png>] [8 <./img_t2/cic_node_K.png> <./img_t2/cic_
-node_L.png> <./img_t2/cic_node_M.png>] [9 <./img_t2/cic_node_N.png> <./img_t2/c
-ic_node_O.png> <./img_t2/cic_node_P.png> <./img_t2/cic_node_Q.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 278.
+.png>]
+[7 <./img_t2/cic_node_G.png> <./img_t2/cic_node_H.png> <./img_t2/cic_node_I.png
+> <./img_t2/cic_node_J.png>] [8 <./img_t2/cic_node_K.png> <./img_t2/cic_node_L.
+png> <./img_t2/cic_node_M.png>] [9 <./img_t2/cic_node_N.png> <./img_t2/cic_node
+_O.png> <./img_t2/cic_node_P.png> <./img_t2/cic_node_Q.png>]
+Underfull \vbox (badness 3838) has occurred while \output is active []
+
  [10 <./img_t2/cic_node_R.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 278.
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `htbp') on input line 321.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 325.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 325.
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `htbp') on input line 349.
+
+<./img_t2/Dijkstra.png, id=148, 367.3725pt x 453.695pt>
+File: ./img_t2/Dijkstra.png Graphic file (type png)
+
+<use ./img_t2/Dijkstra.png>
+Package pdftex.def Info: ./img_t2/Dijkstra.png used on input line 382.
+(pdftex.def)             Requested size: 257.15898pt x 317.58434pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11]
+[12] [13 <./img_t2/Dijkstra.png>] [14]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 424.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 424.
  (./Relatorio2.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 278.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 278.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 424.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 424.
 Package rerunfilecheck Info: File `Relatorio2.out' has not changed.
 (rerunfilecheck)             Checksum: 24994261FE42D466E4BDD37AB261391E;61.
  ) 
 Here is how much of TeX's memory you used:
- 35080 strings out of 494910
- 775044 string characters out of 6179835
- 780812 words of memory out of 5000000
- 37942 multiletter control sequences out of 15000+600000
- 6614 words of font info for 25 fonts, out of 8000000 for 9000
+ 35659 strings out of 494910
+ 783193 string characters out of 6179835
+ 796684 words of memory out of 5000000
+ 38485 multiletter control sequences out of 15000+600000
+ 8439 words of font info for 31 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  141i,10n,174p,10389b,4082s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmtt8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmtt9.pfb>
-Output written on Relatorio2.pdf (10 pages, 364005 bytes).
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmtt8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmtt9.pfb>
+Output written on Relatorio2.pdf (14 pages, 421086 bytes).
 PDF statistics:
- 178 PDF objects out of 1000 (max. 8388607)
- 131 compressed objects within 2 object streams
- 48 named destinations out of 1000 (max. 500000)
- 137 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 230 PDF objects out of 1000 (max. 8388607)
+ 174 compressed objects within 2 object streams
+ 67 named destinations out of 1000 (max. 500000)
+ 142 words of extra memory for PDF output out of 10000 (max. 10000000)
 

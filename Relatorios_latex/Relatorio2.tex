@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{hyperref}
+\usepackage{algpseudocode}
 
 \graphicspath{{./img_t2/}}
 
@@ -107,7 +108,7 @@ A Figura \ref{file_tree} mostra os novos arquivos do pacote fcr2017 utilizados p
 			]
 		]
 		[CIC\_graph.txt - Definição do mapa topológico do primeiro andar do prédio CIC/EST, file]
-		[README.txt - Mais informações sobre o pacote, file]
+		[README.md - Mais informações sobre o pacote, file]
 		[..., file]
 	]
 \end{forest}
@@ -162,7 +163,7 @@ Informações sobre o que o Pioneer está fazendo são atualizados constantement
 
 
 \pagebreak
-\subsection{Arquivos das grades de ocupação}
+\subsection{Arquivos das grades de ocupação} \label{grid_file}
 Quando as grades de ocupação de todas as regiões do mapa topológico estão completas, elas são salvas como imagens na pasta \textit{map\_output/}. As imagens correspondente a cada um dos nós do grafo são mostrados nas Figuras \ref{fig:grade_no_A} a \ref{fig:grade_no_R}.
 
 \begin{figure}
@@ -274,5 +275,150 @@ Quando as grades de ocupação de todas as regiões do mapa topológico estão c
 	\label{fig:grade_no_R}
 \end{figure}
 
+\pagebreak
+\section{Controle de movimento} \label{sec:movement}
+O controle de movimento utiliza três dados para determinar as velocidade linear e angular do Pioneer, esses dados são as leituras de distâncias realizados pelo sensor laser, a posição absoluta determinada pelo odômetro e uma lista com as posições absolutas dos próximos objetivos, que é obtida tanto pela entrada direta do usuário como o planejamento de trajetória do mapa discutido na seção \ref{subsec:path}.
+
+O controle de movimento possui dois modos de operação distintos, explicados a seguir.
+
+\subsection{Sem obstáculo no caminho} \label{subscs:no_object}
+Quando não há obstáculo no caminho o controle de movimento funciona de maneira bem simples, ajustando as velocidades linear e angular de forma que o Pioneer se movimente em direção do próximo objetivo.
+
+\subsection{obstáculo no caminho} \label{subsec:object}
+Quando um obstáculo é identificado no caminho entre a posição atual e o próximo objetivo, o controle de movimento entra em uma modo de funcionamento diferente que evita o obstáculo que continua tentando fazer o Pioneer se aproximar do objetivo mas sem colidir com o obstáculo.
+
+O comportamento do Pioneer nesse modo é semelhante ao algoritmo Bug-0 descrito na referência \cite{Bug}. E pode ser descrito de forma simplificada pelo seguinte pseudocódigo.
+
+\pagebreak
+\begin{algorithmic}
+\While{\textbf{NOT} Chegou no objetivo}
+	\If{Sem obstáculo}
+		\State \Call{volta\_para\_modo\_normal}{ }
+	\ElsIf{Distância crítica}
+		\State velocidade\_linear = 0
+		\State \Call{rotaciona}{ }
+	\ElsIf{Direita livre}
+		\State \Call{desvia\_pela\_direita}{ }
+	\ElsIf{Esquerda livre}
+		\State \Call{desvia\_pela\_esquerda}{ }
+	\Else
+		\State \Call{encontra\_menor\_angulo\_de\_escape}{ }
+		\State \Call{rotaciona\_para\_angulo\_de\_escape}{ }
+	\EndIf
+\EndWhile
+\end{algorithmic}
+
+
+\section{Mapa topológico} \label{sec:graph}
+\subsection{Implementação}
+O mapa topológico foi implementado representando regiões como nós de um grafo e os possíveis caminhos entre regiões são representados pelas arestas do grafo, seguindo o modelo relacional descrito nas referências \cite{AI} e \cite{slides}.
+
+\subsection{Definição do mapa topológico}
+O grafo que representando o mapa topológico pode ser facilmente alterado pois ele é definido em um arquivo de texto comum separado da implementação, esse arquivo possui três tipos de dados sobre o grafo, informações sobre as arestas e um caminho fechado que para percorrer todas as regiões do grafo, esse caminho é utilizado na construção da grade de ocupação.
+
+A definição do mapa topológico do segundo andar do prédio do CIC encontra-se no arquivo \textit{CIC\_graph.txt} e nas tabelas \ref{node-table} e \ref{edge-table}.
+
+\begin{table}[]
+\centering
+\caption{Definição dos nós do mapa topológico do CIC}
+\label{node-table}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ID & Ponto central X & Ponto central Y & Tolerância X & Tolerância Y \\ \hline
+A & -27.5 & 18 & 2.5 & 2 \\ \hline
+B & -27.5 & 9 & 2.5 & 7 \\ \hline
+C & -27.5 & 0 & 2.5 & 2 \\ \hline
+D & -14 & 18 & 11 & 2 \\ \hline
+E & -14 & 0 & 11 & 2 \\ \hline
+F & -1 & 18 & 2 & 2 \\ \hline
+G & -1 & 9 & 2 & 7 \\ \hline
+H & -1 & 0 & 2 & 2 \\ \hline
+I & 8 & 18 & 7 & 2 \\ \hline
+J & 8 & 0 & 7 & 2 \\ \hline
+K & 19 & 18 & 4 & 2 \\ \hline
+L & 19 & 9 & 4 & 7 \\ \hline
+M & 19 & 0 & 4 & 2 \\ \hline
+N & 30 & 18 & 7 & 2 \\ \hline
+O & 30 & 0 & 7 & 2 \\ \hline
+P & 38.5 & 18 & 1.5 & 2 \\ \hline
+Q & 38.5 & 9 & 1.5 & 7 \\ \hline
+R & 38.5 & 0 & 1.5 & 2 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Definição das arestas do mapa topológico do CIC}
+\label{edge-table}
+\begin{tabular}{|c|c|c|}
+\hline
+Nó ID & Nó ID & Custo entre os nós \\ \hline
+A & B & 18 \\ \hline
+A & D & 26 \\ \hline
+D & F & 29 \\ \hline
+F & G & 19 \\ \hline
+F & I & 20 \\ \hline
+I & K & 21 \\ \hline
+K & L & 18 \\ \hline
+K & N & 24 \\ \hline
+N & P & 18 \\ \hline
+P & Q & 18 \\ \hline
+Q & R & 18 \\ \hline
+R & O & 18 \\ \hline
+O & M & 24 \\ \hline
+M & L & 18 \\ \hline
+M & J & 23 \\ \hline
+J & H & 20 \\ \hline
+H & G & 19 \\ \hline
+H & E & 28 \\ \hline
+E & C & 27 \\ \hline
+C & B & 19 \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Planejamento de trajetoria} \label{subsec:path}
+O planejamento de trajetórias no mapa topológico é feito utilizando o algoritmo de menor caminho de Dijkstra, como descrito no pseudocódigo a seguir.
+\includegraphics[scale=0.7]{Dijkstra}
+
+A função encontra a sequência de nós entre a posição atual e final com o menor custo e adiciona essa sequência na lista de próximos objetivos do Pioneer.
+
+
+
+
+\section{Grade de ocupação} \label{sec:grid}
+A construção da grade de ocupação é feita percorrendo todos os nós ou regiões do mapa topológico realizando constantemente leituras do odômetro e sensor de distância.
+	
+Com a informação dos sensores é possível determinar se as células da grade de ocupação dentro do alcance do sensor laser estão livre ou ocupadas, as células que não foi possível obter alguma informação são marcadas como indefinidas e com probabilidade de 50\% de estarem ocupadas ou livres.
+
+Cada nó ou região do mapa topológico possui sua grade de ocupação, o resultado da grade é mostrado em tempo de simulação pelo RViz como mostra a figura \ref{fig:rviz} e após todas as grades estarem completas a informação de cada grade é salva em um arquivo como explicado na seção \ref{grid_file}
+
+
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{Bug}
+	Howie Choset with slides from G.D. Hager and Z. Dodds,
+	Robotic Motion Planning: Bug Algorithms
+	16-735
+
+\bibitem{AI}
+	Robin R. Murphy. 2000,
+	Introduction to AI Robotics (1st ed.),
+	MIT Press, Cambridge, MA, USA. 
+	
+\bibitem{slides}
+	Carla Koike,
+	Slides da disciplina Fundamentos Computacionais de Robótica,
+	Departamento de Ciência da Computação, UnB.
+	
+\bibitem{primer}
+	Maja J. Matarić,
+	The Robotics Primer,
+	MIT Press.
+
+\end{thebibliography}
 
 \end{document}
