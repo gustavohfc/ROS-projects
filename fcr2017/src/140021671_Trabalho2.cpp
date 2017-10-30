@@ -1,11 +1,11 @@
 #include <ros/ros.h>
 #include <ros/console.h>
 
-#include "common_lib/common.h"
-#include "common_lib/odometer.h"
-#include "common_lib/laser_sensor.h"
-#include "common_lib/motion_controller.h"
-#include "common_lib/graph.h"
+#include "common.h"
+#include "odometer.h"
+#include "laser_sensor.h"
+#include "motion_controller.h"
+#include "graph.h"
 
 
 #define LOOP_RATE 60
