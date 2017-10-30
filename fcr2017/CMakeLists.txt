@@ -36,4 +36,13 @@ target_link_libraries(forward_kinematics_pioneer ${catkin_LIBRARIES})
 #add_executable(pwm_quad src/pwm_quad.cpp)
 #target_link_libraries(pwm_quad ${catkin_LIBRARIES})
 
-
+# Roteiro 7
+add_executable(140021671_roteiro7
+         src/140021671_roteiro7.cpp
+         src/common_lib/odometer.cpp
+         src/common_lib/laser_sensor.cpp
+         src/common_lib/motion_controller.cpp
+         src/common_lib/graph.cpp
+         src/common_lib/grid_map.cpp
+         src/common_lib/common.cpp)
+target_link_libraries(140021671_roteiro7 ${catkin_LIBRARIES})
