@@ -6,7 +6,6 @@
 
   <maintainer email="gabriel.araujo.5000@gmail.com">Gabriel Araujo</maintainer>
 
-
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
@@ -29,6 +28,7 @@
   <run_depend>p2os_msgs</run_depend>
   <run_depend>laser_line_extraction</run_depend>
   <run_depend>tf</run_depend>
+  <run_depend>rospy</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

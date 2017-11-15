@@ -17,6 +17,7 @@
                 "/usr/include",
                 "${workspaceRoot}",
                 "${workspaceRoot}/fcr2017/include",
+                "${workspaceRoot}/../devel/include",
                 "/usr/include/x86_64-linux-gnu/c++/5",
                 "/usr/include/c++/5",
                 "/usr/local/include",
