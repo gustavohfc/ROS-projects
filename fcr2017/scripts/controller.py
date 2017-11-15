@@ -8,12 +8,14 @@ from std_msgs.msg import Char
 import rospy
 
 INSTRUCTIONS = """
-    ^
-  Q W E
-< A   D >
+      ^
+   Q  W  E
+<  A     D  >
+
+S - Stop
 """
 CTRL_C = 3
-valid_keys = ['a', 'q', 'w', 'e', 'd', 'r']
+valid_keys = ['a', 'q', 'w', 'e', 'd', 'r', 's']
 
 
 if __name__ == "__main__":
@@ -25,7 +27,7 @@ if __name__ == "__main__":
     print INSTRUCTIONS
     tty.setraw(sys.stdin.fileno())
 
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(30)
     while not rospy.is_shutdown():
         rate.sleep()
 
