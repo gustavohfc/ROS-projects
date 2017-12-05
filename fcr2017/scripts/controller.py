@@ -10,7 +10,7 @@ import rospy
 INSTRUCTIONS = """
       ^
    Q  W  E
-<  A     D  >
+<  A  S  D  >
 
 S - Stop
 """

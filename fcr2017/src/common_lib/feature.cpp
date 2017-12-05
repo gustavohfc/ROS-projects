@@ -3,7 +3,7 @@
 #include "feature.h"
 
 Feature::Feature(ros::NodeHandle& nodeHandle, const LaserSensor& _laser_sensor)
-    : data_already_processed(true), laser_sensor(_laser_sensor)
+    : data_already_processed(true), laser_sensor(_laser_sensor), has_changed(false)
 {
     subscriber = nodeHandle.subscribe("line_segments", 1, &Feature::callback, this);
 }
@@ -26,9 +26,11 @@ void Feature::process()
     extract_corridors();
     extract_corners();
 
-    std::cout << "Canto interno" << internal_corners_count << std::endl;
-    std::cout << "Canto externo" << external_corners_count << std::endl;
-    std::cout << "-----------------------" << std::endl;
+    has_changed = true;
+
+    // std::cout << "Canto interno" << internal_corners_count << std::endl;
+    // std::cout << "Canto externo" << external_corners_count << std::endl;
+    // std::cout << "-----------------------" << std::endl;
 }
 
 

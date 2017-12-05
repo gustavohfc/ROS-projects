@@ -51,6 +51,6 @@
     <node pkg="fcr2017" name="controller" type="controller.py" output="screen" launch-prefix="gnome-terminal --command" />
 
     <!-- Start the main node -->
-    <!-- <node name="Trabalho3" pkg="fcr2017" type="140021671_trabalho3" args="$(find fcr2017)" output="screen" /> -->
+    <node name="Trabalho3" pkg="fcr2017" type="140021671_trabalho3" args="$(find fcr2017)" output="screen" />
 
 </launch>

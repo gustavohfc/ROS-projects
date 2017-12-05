@@ -42,5 +42,6 @@ add_executable(140021671_trabalho3
          src/common_lib/laser_sensor.cpp
          src/common_lib/user_motion_controller.cpp
          src/common_lib/feature.cpp
+         src/common_lib/localization.cpp
          src/common_lib/common.cpp)
 target_link_libraries(140021671_trabalho3 ${catkin_LIBRARIES})

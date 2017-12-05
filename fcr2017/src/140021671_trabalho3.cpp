@@ -6,6 +6,8 @@
 #include "laser_sensor.h"
 #include "user_motion_controller.h"
 #include "feature.h"
+#include "localization.h"
+
 
 
 #define LOOP_RATE 120
@@ -24,6 +26,7 @@ int main(int argc, char **argv)
     LaserSensor laser_sensor(nodeHandle);
     UserMotionController motion_controller(nodeHandle, laser_sensor);
     Feature features(nodeHandle, laser_sensor);
+    Localization localization(nodeHandle, features);
 
     // Wait until receive at least one message from each sensor
     while (!laser_sensor.msg)
@@ -43,6 +46,13 @@ int main(int argc, char **argv)
         motion_controller.move();
 
         features.process();
+
+        // Update the localization if there is new information of the features
+        if (features.has_changed)
+        {
+            localization.update();
+            features.has_changed = false;
+        }
     }
 
     return 0;

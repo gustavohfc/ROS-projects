@@ -78,6 +78,12 @@ public:
     Feature(ros::NodeHandle& nodeHandle, const LaserSensor& _laser_sensor);
     void callback(const laser_line_extraction::LineSegmentList::ConstPtr& msg);
     void process();
+
+    double get_corridor_width() { return corridor_width; };
+    uint get_internal_corners_count() { return internal_corners_count; };
+    uint get_external_corners_count() { return external_corners_count; };
+
+    bool has_changed;
 };
 
 #endif
