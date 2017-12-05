@@ -5,7 +5,6 @@
 #include "common.h"
 #include "laser_sensor.h"
 #include "user_motion_controller.h"
-#include "graph.h"
 #include "feature.h"
 
 
