@@ -21,6 +21,8 @@ private:
 public:
     UserMotionController(ros::NodeHandle& nodeHandle, const LaserSensor& _laser_sensor);
 
+    bool resetReceived;
+
     void callback(const std_msgs::Char::ConstPtr& msg);
     void move();
 };

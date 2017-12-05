@@ -43,6 +43,13 @@ int main(int argc, char **argv)
 
         ros::spinOnce();
 
+        // Reset the probability if receive the command 'R'
+        if (motion_controller.resetReceived)
+        {
+            motion_controller.resetReceived = false;
+            localization.resetProbabilities();
+        }
+
         motion_controller.move();
 
         features.process();

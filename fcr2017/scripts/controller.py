@@ -13,6 +13,8 @@ INSTRUCTIONS = """
 <  A  S  D  >
 
 S - Stop
+
+R - Reset probabilities
 """
 CTRL_C = 3
 valid_keys = ['a', 'q', 'w', 'e', 'd', 'r', 's']

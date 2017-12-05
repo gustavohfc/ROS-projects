@@ -3,7 +3,7 @@
 
 
 UserMotionController::UserMotionController(ros::NodeHandle& nodeHandle, const LaserSensor& _laser_sensor)
-    : laser_sensor(_laser_sensor), user_command(0)
+    : laser_sensor(_laser_sensor), user_command(0), resetReceived(false)
 {
     sub_controller = nodeHandle.subscribe("controller", 1, &UserMotionController::callback, this);
     pub_vel = nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1);
@@ -13,6 +13,11 @@ UserMotionController::UserMotionController(ros::NodeHandle& nodeHandle, const La
 void UserMotionController::callback(const std_msgs::Char::ConstPtr& msg)
 {
     user_command = msg->data;
+
+    if (user_command == 'r')
+    {
+        resetReceived = true;
+    }
 }
 
 

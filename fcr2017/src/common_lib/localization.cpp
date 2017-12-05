@@ -1,12 +1,21 @@
 
+#include <std_msgs/Float64MultiArray.h>
 #include "localization.h"
 
 Localization::Localization(ros::NodeHandle& nodeHandle, Feature& features)
     : features(features)
 {
+    pub_probabilities = nodeHandle.advertise<std_msgs::Float64MultiArray>("probabilities", 1);
+
     // Inicia as probabilidades
-    P_S = std::vector<double>(18, 1.0 / 18.0);
+    resetProbabilities();
 }
+
+
+ void Localization::resetProbabilities()
+ {
+    P_S = std::vector<double>(18, 1.0 / 18.0);
+ }
 
 
 void Localization::update()
@@ -32,6 +41,7 @@ void Localization::update()
     P_S = P_S_new;
     normalise();
     show();
+    send_data();
 }
 
 
@@ -44,19 +54,9 @@ void Localization::normalise()
         sum += P_S[i];
     }
 
-    if (sum > 1)
+    for (int i = 0; i < 18; i++)
     {
-        for (int i = 0; i < 18; i++)
-        {
-            P_S[i] /= sum;
-        }
-    }
-    else
-    {
-        for (int i = 0; i < 18; i++)
-        {
-            P_S[i] += (1 - sum) / 18;
-        }
+        P_S[i] /= sum;
     }
 }
 
@@ -89,9 +89,9 @@ double Localization::getP_feature(int node)
 {
     double P = 0.5;
 
-    if (fabs(features.get_corridor_width() - corridor_width[node]))
+    if (fabs(features.get_corridor_width() - corridor_width[node]) < 0.4)
     {
-        P += 0.3;
+        P += 0.5;
     }
 
     int expected_corners = internal_corners[node] + external_corners[node];
@@ -100,7 +100,7 @@ double Localization::getP_feature(int node)
     if (fabs(expected_corners - number_of_corners) == 2)
     {
         // Should have seen two corner but did not see any
-        P -= 0.15;
+        P -= 0.25;
     }
     else if (fabs(expected_corners - number_of_corners) == 1)
     {
@@ -109,8 +109,21 @@ double Localization::getP_feature(int node)
     else
     {
         // See all the corners in the node
-        P += 0.15;
+        P += 0.25;
     }
 
     return P;
+}
+
+
+void Localization::send_data()
+{
+    std_msgs::Float64MultiArray message;
+
+    for (int i = 0; i < 18; i++)
+    {
+        message.data.push_back(P_S[i]);
+    }
+
+    pub_probabilities.publish(message);
 }

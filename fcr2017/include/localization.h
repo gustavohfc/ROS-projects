@@ -36,7 +36,7 @@ const int external_corners[18] =    {1,     0,      1,      0,      0,      0,  
 class Localization
 {
 private:
-    // ros::Subscriber subscriber;
+    ros::Publisher pub_probabilities;
     Feature& features;
 
     std::vector<double> P_S;
@@ -44,10 +44,12 @@ private:
 public:
     Localization(ros::NodeHandle& nodeHandle, Feature& _features);
     
+    void resetProbabilities();
     void update();
     void normalise();
     void show();
     double getP_feature(int node);
+    void send_data();
 };
 
 #endif
