@@ -1,13 +1,12 @@
 #include <ros/ros.h>
 #include <ros/console.h>
 
-#include "laser_line_extraction/LineSegmentList.h"
 
 #include "common.h"
-#include "odometer.h"
 #include "laser_sensor.h"
 #include "user_motion_controller.h"
 #include "graph.h"
+#include "feature.h"
 
 
 #define LOOP_RATE 120
@@ -25,6 +24,7 @@ int main(int argc, char **argv)
     // Initialize objects
     LaserSensor laser_sensor(nodeHandle);
     UserMotionController motion_controller(nodeHandle, laser_sensor);
+    Feature features(nodeHandle, laser_sensor);
 
     // Wait until receive at least one message from each sensor
     while (!laser_sensor.msg)
@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 
     ros::Rate loop_rate(LOOP_RATE);
 
+
     while (ros::ok())
     {
         loop_rate.sleep();
@@ -41,6 +42,8 @@ int main(int argc, char **argv)
         ros::spinOnce();
 
         motion_controller.move();
+
+        features.process();
     }
 
     return 0;

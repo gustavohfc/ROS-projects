@@ -84,3 +84,19 @@ double LaserSensor::getShortestDistance(double angle1, double angle2) const
 
     return shortestDistance;
 }
+
+
+double LaserSensor::getWidth() const
+{
+    double width = 10000;
+
+    for (double angle = getAngleMin(); angle < 0; angle += 0.0174533)
+    {
+        if (width > atAngle(angle) + atAngle(-1 * angle))
+        {
+            width = atAngle(angle) + atAngle(-1 * angle);
+        }
+    }
+
+    return width;
+}

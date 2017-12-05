@@ -6,7 +6,6 @@
     <env name="GAZEBO_MODEL_PATH" value="$(arg pkg_gazebo_worlds)/models:$(optenv GAZEBO_MODEL_PATH)"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch" >
-        <!-- To use this world go to https://github.com/Gastd/cic and download the model -->
         <arg name="world_name" value="$(find fcr2017)/worlds/my_cic.world"/>
     </include>
 
@@ -49,9 +48,9 @@
 
 
     <!-- Start the controller script in a new terminal -->
-    <node pkg="fcr2017" name="controller" type="controller.py" output="screen" launch-prefix="xterm -e" />
+    <node pkg="fcr2017" name="controller" type="controller.py" output="screen" launch-prefix="gnome-terminal --command" />
 
     <!-- Start the main node -->
-    <node name="Trabalho3" pkg="fcr2017" type="140021671_trabalho3" args="$(find fcr2017)" output="screen" />
+    <!-- <node name="Trabalho3" pkg="fcr2017" type="140021671_trabalho3" args="$(find fcr2017)" output="screen" /> -->
 
 </launch>

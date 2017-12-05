@@ -18,6 +18,7 @@ public:
     double getAngleMin() const;
     double getAngleMax() const;
     double getShortestDistance(double angle1, double angle2) const;
+    double getWidth() const;
 };
 
 #endif

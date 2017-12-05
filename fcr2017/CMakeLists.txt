@@ -40,9 +40,9 @@ target_link_libraries(forward_kinematics_pioneer ${catkin_LIBRARIES})
 add_executable(140021671_trabalho3
          src/140021671_trabalho3.cpp
          src/common_lib/laser_sensor.cpp
-         src/common_lib/odometer.cpp
          src/common_lib/user_motion_controller.cpp
          src/common_lib/graph.cpp
          src/common_lib/grid_map.cpp
+         src/common_lib/feature.cpp
          src/common_lib/common.cpp)
 target_link_libraries(140021671_trabalho3 ${catkin_LIBRARIES})
