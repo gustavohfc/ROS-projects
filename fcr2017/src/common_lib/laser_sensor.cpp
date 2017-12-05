@@ -17,7 +17,7 @@ void LaserSensor::callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 
 
 
-// Retorna a leitura de distancia mais proxima do angulo (em radianos)
+// Returns the closest reading of a specific angle
 double LaserSensor::atAngle(double angle) const
 {
     try
@@ -32,19 +32,33 @@ double LaserSensor::atAngle(double angle) const
 }
 
 
-
+// Returns the minimun angle read by the sensor
 double LaserSensor::getAngleMin() const
 {
     return msg->angle_min;
 }
 
 
-
+// Returns the maximus angle read by the sensor
 double LaserSensor::getAngleMax() const
 {
     return msg->angle_max;
 }
 
+double LaserSensor::getWidth() const
+{
+    double width = 10000;
+
+    for (double angle = getAngleMin(); angle < 0; angle += 0.0174533)
+    {
+        if (width > atAngle(angle) + atAngle(-1 * angle))
+        {
+            width = atAngle(angle) + atAngle(-1 * angle);
+        }
+    }
+
+    return width;
+}
 
 
 // Returns the smallest distance read by the laser sensor in the interval
@@ -85,18 +99,3 @@ double LaserSensor::getShortestDistance(double angle1, double angle2) const
     return shortestDistance;
 }
 
-
-double LaserSensor::getWidth() const
-{
-    double width = 10000;
-
-    for (double angle = getAngleMin(); angle < 0; angle += 0.0174533)
-    {
-        if (width > atAngle(angle) + atAngle(-1 * angle))
-        {
-            width = atAngle(angle) + atAngle(-1 * angle);
-        }
-    }
-
-    return width;
-}

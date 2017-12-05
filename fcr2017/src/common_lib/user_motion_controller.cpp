@@ -10,6 +10,7 @@ UserMotionController::UserMotionController(ros::NodeHandle& nodeHandle, const La
 }
 
 
+// Receive the message from the controller script
 void UserMotionController::callback(const std_msgs::Char::ConstPtr& msg)
 {
     user_command = msg->data;
@@ -21,6 +22,7 @@ void UserMotionController::callback(const std_msgs::Char::ConstPtr& msg)
 }
 
 
+// Send a message to the Pionner to move according to the user's command
 void UserMotionController::move()
 {
     geometry_msgs::Twist velocity;

@@ -36,7 +36,6 @@ int main(int argc, char **argv)
 
     ros::Rate loop_rate(LOOP_RATE);
 
-
     while (ros::ok())
     {
         loop_rate.sleep();
@@ -50,8 +49,10 @@ int main(int argc, char **argv)
             localization.resetProbabilities();
         }
 
+        // Move the Pionner according to the user's command
         motion_controller.move();
 
+        // Process and extracts the features from the line segments
         features.process();
 
         // Update the localization if there is new information of the features

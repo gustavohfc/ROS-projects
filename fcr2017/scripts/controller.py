@@ -20,6 +20,8 @@ CTRL_C = 3
 valid_keys = ['a', 'q', 'w', 'e', 'd', 'r', 's']
 
 
+# This script show the instructions to the user and wait for a key to be pressed,
+# if the key pressed is valid then it send the key character to the main node.
 if __name__ == "__main__":
     pub = rospy.Publisher('controller', Char, queue_size=1)
     rospy.init_node('controller', anonymous=True)

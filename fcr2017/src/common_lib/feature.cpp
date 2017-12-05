@@ -27,10 +27,6 @@ void Feature::process()
     extract_corners();
 
     has_changed = true;
-
-    // std::cout << "Canto interno" << internal_corners_count << std::endl;
-    // std::cout << "Canto externo" << external_corners_count << std::endl;
-    // std::cout << "-----------------------" << std::endl;
 }
 
 
@@ -95,51 +91,7 @@ void Feature::extract_corridors()
             }
         }
     }
-
-    // for (int i = 0; i < lines.size(); i++)
-    // {
-    //     for (int j = 0; j < lines.size(); j++)
-    //     {
-    //         if (i != j &&
-    //             !exist_corridor(&lines[i], &lines[j]) &&
-    //             fabs(lines[i].angle - lines[j].angle) < ANGLE_TOLERANCE)
-    //         {
-    //             corridors.push_back(corridor(&lines[i], &lines[j]));
-    //         }
-    //     }
-    // }
-
-    // corridors = std::vector<corridor>();
-
-    // for (int i = 0; i < lines.size(); i++)
-    // {
-    //     for (int j = 0; j < lines.size(); j++)
-    //     {
-    //         if (i != j &&
-    //             !exist_corridor(&lines[i], &lines[j]) &&
-    //             fabs(lines[i].angle - lines[j].angle) < ANGLE_TOLERANCE)
-    //         {
-    //             corridors.push_back(corridor(&lines[i], &lines[j]));
-    //         }
-    //     }
-    // }
 }
-
-
-// Check if already exists a corridor with this two walls
-// bool Feature::exist_corridor(line *wall_1, line *wall_2)
-// {
-//     for (int i = 0; i < corridors.size(); i++)
-//     {
-//         if ((corridors[i].wall_1 == wall_1 && corridors[i].wall_2 == wall_2) ||
-//             (corridors[i].wall_1 == wall_2 && corridors[i].wall_2 == wall_1))
-//         {
-//             return true;
-//         }
-//     }
-
-//     return false;
-// }
 
 
 // Extract the corners features from the vector lines

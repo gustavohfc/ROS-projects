@@ -2,6 +2,8 @@
 #include <std_msgs/Float64MultiArray.h>
 #include "localization.h"
 
+#define N_NODES 18
+
 Localization::Localization(ros::NodeHandle& nodeHandle, Feature& features)
     : features(features)
 {
@@ -14,25 +16,26 @@ Localization::Localization(ros::NodeHandle& nodeHandle, Feature& features)
 
  void Localization::resetProbabilities()
  {
-    P_S = std::vector<double>(18, 1.0 / 18.0);
+    P_S = std::vector<double>(N_NODES, 1.0 / N_NODES);
  }
 
 
+// Update the node probability array
 void Localization::update()
 {
-    std::vector<double> P_S_new(18, 0);
+    std::vector<double> P_S_new(N_NODES, 0);
 
     // Calculate the  P(S1| A) = SUM P(S1|S0 A)P(S0)
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < N_NODES; i++)
     {
-        for (int j = 0; j < 18; j++)
+        for (int j = 0; j < N_NODES; j++)
         {
             P_S_new[j] += P_action[i][j] * P_S[i];
         }
     }
 
     // Calculate P(S1| Z) = P(Z | S1 ) P(S1| A)
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < N_NODES; i++)
     {
         // Calculate the probability of a feature on node i
         P_S_new[i] *= getP_feature(i);
@@ -45,22 +48,24 @@ void Localization::update()
 }
 
 
+// Normalise the probability array
 void Localization::normalise()
 {
     double sum;
 
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < N_NODES; i++)
     {
         sum += P_S[i];
     }
 
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < N_NODES; i++)
     {
         P_S[i] /= sum;
     }
 }
 
 
+// Print the current probability of each node
 void Localization::show()
 {
     std::cout << "\n\n\n\n\n\n\n\n";
@@ -85,6 +90,7 @@ void Localization::show()
 }
 
 
+// Calculate the probability of each feature in the current node
 double Localization::getP_feature(int node)
 {
     double P = 0.5;
@@ -116,11 +122,12 @@ double Localization::getP_feature(int node)
 }
 
 
+// Send the probability array to the python script that displays and saves this data
 void Localization::send_data()
 {
     std_msgs::Float64MultiArray message;
 
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < N_NODES; i++)
     {
         message.data.push_back(P_S[i]);
     }

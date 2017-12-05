@@ -47,10 +47,10 @@
     </node>
 
 
-    <!-- Start the controller script in a new terminal -->
+    <!-- Start the controller script in a new terminal window -->
     <node pkg="fcr2017" name="controller" type="controller.py" output="screen" launch-prefix="gnome-terminal --command" />
 
-
+    <!-- Start the live ploter script in a new terminal window -->
     <node pkg="fcr2017" name="live_plot" type="live_plot.py" output="screen" launch-prefix="gnome-terminal --command" />
 
     <!-- Start the main node -->
